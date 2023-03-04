@@ -8,7 +8,7 @@ const router = createRouter({
       path: '/',
       name: 'index',
       component: ChatGPT
-    },
+    }
     // {
     //   path: '/about',
     //   name: 'about',

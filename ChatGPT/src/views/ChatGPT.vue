@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import MessageBox from "../components/MessageBox.vue";
+import MessageBox from '../components/MessageBox.vue'
 import axios from 'axios'
 
-const input = ref("")
+const input = ref('')
 const messages = ref([
   // {
   //   typ: 'chatgpt',
@@ -36,72 +36,69 @@ const role_list = ref([
 const isSending = ref(false)
 
 const body = ref({
-  token: "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",
+  token: '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',
   role: 'user'
 })
 
 const send = () => {
   console.log(input.value)
-  if (input.value == "") {
-    ElMessage(
-      {
-        message: "请输入内容",
-        type: 'error'
-      }
-    )
+  if (input.value == '') {
+    ElMessage({
+      message: '请输入内容',
+      type: 'error'
+    })
     return
   }
 
   if (isSending.value) {
-    ElMessage(
-      {
-        message: "请等待回答完毕",
-        type: 'error'
-      }
-    )
+    ElMessage({
+      message: '请等待回答完毕',
+      type: 'error'
+    })
     return
   }
 
   messages.value.push({
     typ: 'user',
     msg: input.value
-  },)
+  })
   isSending.value = true
   const content = get_content()
   console.log(content)
   body.value.content = content
-  input.value = ""
-  axios.post("http://23.105.196.211:8000/chatgpt", body.value).then(function (response) {
-    // 处理成功情况
-    console.log(response);
-    messages.value.push({
-      typ: 'chatgpt',
-      msg: response['data']['choices'][0]['message']['content']
-    },)
-  })
+  input.value = ''
+  axios
+    .post('http://23.105.196.211:8000/chatgpt', body.value)
+    .then(function (response) {
+      // 处理成功情况
+      console.log(response)
+      messages.value.push({
+        typ: 'chatgpt',
+        msg: response['data']['choices'][0]['message']['content']
+      })
+    })
     .catch(function (error) {
       // 处理错误情况
       messages.value.push({
         typ: 'sys',
         msg: '<font color="red">**Error:** 请求出错</font>'
-      },)
-      console.log(error);
-    }).finally(function () {
+      })
+      console.log(error)
+    })
+    .finally(function () {
       // 总是会执行
       isSending.value = false
-    });
+    })
 }
 
-
 const get_content = () => {
-  var content = ""
+  var content = ''
   for (let i = messages.value.length - 1; i >= 0; i--) {
     content = messages.value[i].msg + '\n' + content
   }
   console.log(content.length)
   return content
 }
-
 </script>
 
 <template>
@@ -112,15 +109,31 @@ const get_content = () => {
       <el-row :gutter="10">
         <el-col :span="2">
           <el-select v-model="body.role" placeholder="角色">
-            <el-option v-for="item in role_list" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option
+              v-for="item in role_list"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-col>
         <el-col :span="18">
-          <el-input v-model="input" :autosize="{ minRows: 1, maxRows: 4 }" type="textarea" placeholder="请输入"
-            maxlength="3000" clearable show-word-limit resize="none" @keyup.shift.enter="send" />
+          <el-input
+            v-model="input"
+            :autosize="{ minRows: 1, maxRows: 4 }"
+            type="textarea"
+            placeholder="请输入"
+            maxlength="3000"
+            clearable
+            show-word-limit
+            resize="none"
+            @keyup.shift.enter="send"
+          />
         </el-col>
         <el-col :span="4">
-          <el-button color="#626aef" style="width: 100%;height: 100%" @click="send">发送</el-button>
+          <el-button color="#626aef" style="width: 100%; height: 100%" @click="send"
+            >发送</el-button
+          >
         </el-col>
       </el-row>
     </div>
@@ -136,7 +149,7 @@ const get_content = () => {
   flex-direction: column;
 }
 
-.chat>p {
+.chat > p {
   margin: 0 auto;
   font-size: 40px;
   font-weight: bolder;

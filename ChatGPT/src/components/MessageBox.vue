@@ -1,5 +1,5 @@
 <script setup>
-import Message from "../components/MessageInfo.vue"
+import Message from '../components/MessageInfo.vue'
 import { onUpdated } from 'vue'
 
 defineProps({
@@ -11,9 +11,8 @@ defineProps({
 
 onUpdated(() => {
   var element = document.getElementsByClassName('message-box')[0]
-  element.scrollTop = element.scrollHeight;
+  element.scrollTop = element.scrollHeight
 })
-
 </script>
 
 <template>
