@@ -1,6 +1,10 @@
 <script setup>
 import Message from '../components/MessageInfo.vue'
-import { onUpdated } from 'vue'
+// import { ElLoading } from 'element-plus'
+import { watch, ref } from 'vue'
+import { useMessagesStore } from '../stores/messages'
+const messagesStore = useMessagesStore()
+const sending = messagesStore.sending
 
 defineProps({
   messages: {
@@ -9,16 +13,23 @@ defineProps({
   }
 })
 
-onUpdated(() => {
-  var element = document.getElementsByClassName('message-box')[0]
-  element.scrollTop = element.scrollHeight
+const scrollbarRef = ref(null)
+const innerRef = ref(null)
+
+watch(sending, () => {
+  setTimeout(() => {
+    console.log('scroll...')
+    scrollbarRef.value.setScrollTop(innerRef.value.clientHeight)
+  }, 200)
 })
 </script>
 
 <template>
-  <div class="message-box">
-    <Message v-for="(item, key) in messages" :key="key" :msg="item.msg" :typ="item.typ"></Message>
-  </div>
+  <el-scrollbar ref="scrollbarRef">
+    <div class="message-box" ref="innerRef">
+      <Message v-for="(message, key) in messages" :key="key" :message="message"></Message>
+    </div>
+  </el-scrollbar>
 </template>
 
 <style scoped>
@@ -26,11 +37,5 @@ onUpdated(() => {
   height: 100%;
   margin: 10px 20px;
   padding: 5px;
-  border-style: solid;
-  border-radius: 5px;
-  border-width: 5px;
-  border-color: green;
-  overflow: auto;
-  /* background-color: blue; */
 }
 </style>

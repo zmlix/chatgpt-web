@@ -10,10 +10,12 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@itisbit/markdown-it-katex": "^4.0.1",
     "axios": "^1.3.4",
     "markdown-it": "^13.0.1",
     "markdown-it-highlightjs": "^4.0.1",
     "markdown-it-katex": "^2.0.3",
+    "markdown-it-texmath": "^1.0.0",
     "pinia": "^2.0.32",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
