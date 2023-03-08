@@ -6,7 +6,7 @@ import hljs from 'markdown-it-highlightjs'
 import katex from 'markdown-it-katex'
 import { Check, Edit, Fold, Expand, CloseBold } from '@element-plus/icons-vue'
 import chatgpt from '../assets/ChatGPT_white.png'
-import { showMessage } from '../utils/utils'
+import { showMessage, getCurrentTime } from '../utils/utils'
 import { useMessagesStore } from '../stores/messages'
 const messagesStore = useMessagesStore()
 const sending = messagesStore.sending
@@ -37,10 +37,12 @@ const isCollapse = ref(false)
 const delMsg = () => {
   messagesStore.del(props.message.id)
 }
+
 const setMsg = (val) => {
   console.log(props.message.id, 'setMsg', val)
   messagesStore.set(props.message.id, { skip: val })
 }
+
 const reSendMsg = () => {
   console.log('reSendMsg...')
   if (props.message.msg == '') {
@@ -53,11 +55,13 @@ const reSendMsg = () => {
   }
   const msg_id = props.message.id
   messagesStore.setSendingId(msg_id)
+  messagesStore.set(msg_id, { typ: 'user' })
   messagesStore.getMessage(
     { role: 'user', content: messagesStore.getHistoryMsg('part', { id: msg_id }) },
     { insert: { id: msg_id } }
   )
 }
+
 const new_msg = ref('')
 const isEdit = ref(false)
 const editMsg = () => {
@@ -75,56 +79,61 @@ const editMsgEnter = () => {
 
 <template>
   <div>
-    <div class="message">
-      <div class="message-icon">
-        <el-avatar v-if="message.typ == 'user'" :icon="UserFilled" />
-        <el-avatar v-else :src="chatgpt" />
+    <div class="flex items-start">
+      <div class="p-3 message-icon">
+        <el-avatar v-if="message.typ == 'user'" :icon="UserFilled" class="bg-transparent h-8" />
+        <el-avatar v-else :src="chatgpt" class="bg-transparent h-8" />
       </div>
-      <div class="message-body">
-        <div class="message-body-tool">
-          <el-switch
-            v-if="message.status != 'error'"
-            class="message-body-switch"
-            v-model="isMarkdown"
-            size="small"
-            inline-prompt
-            active-text="md"
-            inactive-text="md"
-            style="height: 5px"
-          />
-          <el-switch
-            class="message-body-switch"
-            v-model="isSkiped"
-            size="small"
-            inline-prompt
-            active-text="跳过"
-            inactive-text="跳过"
-            style="height: 5px"
-            @change="setMsg"
-          />
-          <div class="message-body-del">
-            <el-link
-              :underline="false"
-              :icon="isCollapse ? Expand : Fold"
-              @click="isCollapse = !isCollapse"
-            />
-          </div>
-          <div class="message-body-del">
-            <el-link :underline="false" :icon="Edit" @click="editMsg" />
-          </div>
-          <div class="message-body-del">
-            <el-link :underline="false" :icon="Refresh" @click="reSendMsg" />
-          </div>
-          <div class="message-body-del">
-            <el-link :underline="false" :icon="CloseBold" @click="delMsg" />
+      <div class="flex flex-col justify-center w-full message-body">
+        <div class="flex justify-between items-end">
+          <div class="flex-auto">{{ getCurrentTime(message.time) }}</div>
+          <div class="flex">
+            <div class="flex p-1">
+              <el-switch
+                v-if="message.status != 'error'"
+                class="flex mt-2 p-1"
+                v-model="isMarkdown"
+                size="small"
+                inline-prompt
+                active-text="md"
+                inactive-text="md"
+                style="height: 5px"
+              />
+              <el-switch
+                class="flex mt-2 p-1"
+                v-model="isSkiped"
+                size="small"
+                inline-prompt
+                active-text="跳过"
+                inactive-text="跳过"
+                style="height: 5px"
+                @change="setMsg"
+              />
+            </div>
+            <div class="p-1">
+              <el-link
+                :underline="false"
+                :icon="isCollapse ? Expand : Fold"
+                @click="isCollapse = !isCollapse"
+              />
+            </div>
+            <div class="p-1">
+              <el-link :underline="false" :icon="Edit" @click="editMsg" />
+            </div>
+            <div class="p-1">
+              <el-link :underline="false" :icon="Refresh" @click="reSendMsg" />
+            </div>
+            <div class="p-1">
+              <el-link :underline="false" :icon="CloseBold" @click="delMsg" />
+            </div>
           </div>
         </div>
-        <div class="message-body-msg" v-show="!isCollapse">
-          <el-divider class="message-body-divider" style="margin: 0 0 5px 0"></el-divider>
+        <div class="mt-2 mb-1" v-show="!isCollapse">
+          <el-divider style="margin: 0 0 5px 0"></el-divider>
           <div v-if="!isMarkdown">{{ message.msg }}</div>
           <div v-else v-html="markdown_msg"></div>
         </div>
-        <div class="message-body-edit" v-show="isEdit">
+        <div class="flex items-center m-1" v-show="isEdit">
           <el-input
             v-model="new_msg"
             :autosize="{ minRows: 1, maxRows: 4 }"
@@ -140,8 +149,7 @@ const editMsgEnter = () => {
       </div>
     </div>
     <div
-      class="message-box-loading"
-      style="height: 60px"
+      class="message-box-loading h-16"
       v-loading="sending.isSending"
       v-show="sending.isSending && sending.id == message.id"
     ></div>
@@ -149,28 +157,12 @@ const editMsgEnter = () => {
 </template>
 
 <style>
-.message-icon .el-avatar {
-  background: transparent;
-  height: 30px;
-}
-
 .message-box-loading .el-loading-spinner .path {
   stroke: white;
 }
 
 .message-box-loading .el-loading-mask {
   background-color: transparent;
-}
-</style>
-
-<style scoped>
-.message {
-  display: flex;
-  align-items: flex-start;
-}
-
-.message-icon {
-  padding: 3px;
 }
 
 .message-body {
@@ -181,40 +173,5 @@ const editMsgEnter = () => {
   font-size: 14px;
   max-width: 100%;
   min-height: 30px;
-  display: flex;
-  /* align-items: flex-end; */
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-}
-
-.message-body-tool {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.message-body-switch {
-  /* background-color: aqua; */
-  margin: 10px 5px 0 0;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.message-body-del {
-  margin: 3px;
-}
-
-.message-body-msg {
-  margin: 10px 0 10px 0;
-}
-
-.message-body-edit {
-  display: flex;
-  margin: 5px;
-}
-
-.message-body-edit div {
-  width: 100%;
-  margin: 0 5px 0 0;
 }
 </style>

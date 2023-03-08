@@ -1,6 +1,5 @@
 <script setup>
 import Message from '../components/MessageInfo.vue'
-// import { ElLoading } from 'element-plus'
 import { watch, ref } from 'vue'
 import { useMessagesStore } from '../stores/messages'
 const messagesStore = useMessagesStore()
@@ -26,16 +25,8 @@ watch(sending, () => {
 
 <template>
   <el-scrollbar ref="scrollbarRef">
-    <div class="message-box" ref="innerRef">
+    <div class="h-full mx-5 my-2" ref="innerRef">
       <Message v-for="(message, key) in messages" :key="key" :message="message"></Message>
     </div>
   </el-scrollbar>
 </template>
-
-<style scoped>
-.message-box {
-  height: 100%;
-  margin: 10px 20px;
-  padding: 5px;
-}
-</style>

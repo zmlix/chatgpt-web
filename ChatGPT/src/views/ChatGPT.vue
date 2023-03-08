@@ -1,12 +1,12 @@
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import MessageBox from '../components/MessageBox.vue'
 import { useMessagesStore } from '../stores/messages'
 import { showMessage } from '../utils/utils'
 const messagesStore = useMessagesStore()
 const messages = messagesStore.messages
 const msgbox = ref(null)
-const role_list = ref([
+const role_list = reactive([
   {
     label: '用户',
     value: 'user'
@@ -24,7 +24,7 @@ const role_list = ref([
 const input = ref('')
 const sending = messagesStore.sending
 
-const body = ref({
+const body = reactive({
   role: 'user',
   content: ''
 })
@@ -44,18 +44,17 @@ const send = () => {
     msg: input.value,
     status: 'success'
   })
-  // const loading = msgbox.value.loadingStart()
   input.value = ''
-  body.value.content = messagesStore.getHistoryMsg('all')
-  messagesStore.getMessage(body.value)
+  body.content = messagesStore.getHistoryMsg('all')
+  messagesStore.getMessage(body)
 }
 </script>
 
 <template>
-  <div class="chat">
-    <p>ChatGPT</p>
+  <div class="chat flex flex-col h-full">
+    <p class="m-auto text-6xl font-semibold py-2 bg-clip-text text-transparent">ChatGPT</p>
     <MessageBox ref="msgbox" :messages="messages" />
-    <div class="input">
+    <div class="m-5 pb-5">
       <el-row :gutter="10">
         <el-col :span="2">
           <el-select v-model="body.role" placeholder="角色">
@@ -92,26 +91,11 @@ const send = () => {
 
 <style scoped>
 .chat {
-  width: 100%;
-  height: 100%;
   background: linear-gradient(to right bottom, #ab79c2, #8a84bf, #6b91c1);
-  display: flex;
-  flex-direction: column;
 }
 
 .chat > p {
-  margin: 0 auto;
-  font-size: 60px;
   font-family: Inter;
-  font-weight: 600;
-  padding: 10px;
   background-image: linear-gradient(135deg, #756aee 52%, #ee756a 10%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.input {
-  margin: 10px 20px;
-  padding-bottom: 30px;
 }
 </style>
