@@ -19,3 +19,20 @@ export const getCurrentTime = (t) => {
 export const showMessage = (msg, type) => {
   ElMessage({ message: msg, type: type })
 }
+
+export const downloadJson = (data) => {
+  const jsonString = JSON.stringify(data)
+  const blob = new Blob([jsonString], { type: 'application/json' })
+  const downloadLink = document.createElement('a')
+  downloadLink.href = URL.createObjectURL(blob)
+  downloadLink.download = 'chats.json'
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  document.body.removeChild(downloadLink)
+}
+
+export const uploadJson = (file, fn) => {
+  const reader = new FileReader()
+  reader.readAsText(file)
+  reader.onload = fn(reader)
+}

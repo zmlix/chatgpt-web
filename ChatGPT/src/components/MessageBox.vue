@@ -1,6 +1,7 @@
 <script setup>
-import Message from '../components/MessageInfo.vue'
 import { watch, ref } from 'vue'
+import draggable from 'vuedraggable'
+import Message from '../components/MessageInfo.vue'
 import { useMessagesStore } from '../stores/messages'
 const messagesStore = useMessagesStore()
 const sending = messagesStore.sending
@@ -18,7 +19,9 @@ const innerRef = ref(null)
 watch(sending, () => {
   setTimeout(() => {
     console.log('scroll...')
-    scrollbarRef.value.setScrollTop(innerRef.value.clientHeight)
+    if (sending.typ === 'all') {
+      scrollbarRef.value.setScrollTop(innerRef.value.clientHeight)
+    }
   }, 200)
 })
 </script>
@@ -26,7 +29,13 @@ watch(sending, () => {
 <template>
   <el-scrollbar ref="scrollbarRef">
     <div class="h-full mx-5 my-2" ref="innerRef">
-      <Message v-for="(message, key) in messages" :key="key" :message="message"></Message>
+      <draggable :list="messages" handle=".drag-msg" item-key="id">
+        <template #item="{ element }">
+          <div>
+            <Message :message="element"></Message>
+          </div>
+        </template>
+      </draggable>
     </div>
   </el-scrollbar>
 </template>

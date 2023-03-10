@@ -16,8 +16,11 @@
     "markdown-it-highlightjs": "^4.0.1",
     "markdown-it-katex": "^2.0.3",
     "pinia": "^2.0.32",
+    "pinia-plugin-persistedstate": "^3.1.0",
     "vue": "^3.2.47",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vuedraggable": "^4.1.0",
+    "zipson": "^0.2.12"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",

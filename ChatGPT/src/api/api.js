@@ -17,16 +17,21 @@ const chatRequest = (data) => {
 }
 
 const axiosConfig = {
-  baseURL: env.apiURL,
+  baseURL: env.apiURL || '/',
   headers: {
-    'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + env.OPENAI_API_KEY
+    'Content-Type': 'application/json'
   },
   proxy: env.proxy || {}
 }
 
 const ChatGPTApi = axios.create(axiosConfig)
 
-export const post_GetMessage = (data, timeout = DEFAULT_TIMEOUT) => {
-  return ChatGPTApi.post('', data, { transformRequest: [chatRequest], timeout: timeout })
+export const post_GetMessage = (data, api_key = '', timeout = DEFAULT_TIMEOUT) => {
+  return ChatGPTApi.post('', data, {
+    transformRequest: [chatRequest],
+    timeout: timeout,
+    headers: {
+      Authorization: 'Bearer ' + api_key
+    }
+  })
 }

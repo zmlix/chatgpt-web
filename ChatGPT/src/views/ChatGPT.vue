@@ -1,25 +1,29 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import MessageBox from '../components/MessageBox.vue'
+import SideBar from '../components/SideBar.vue'
+import { useChatStore } from '../stores/chat'
 import { useMessagesStore } from '../stores/messages'
 import { showMessage } from '../utils/utils'
+import { Setting } from '@element-plus/icons-vue'
 const messagesStore = useMessagesStore()
-const messages = messagesStore.messages
-const msgbox = ref(null)
-const role_list = reactive([
-  {
-    label: '用户',
-    value: 'user'
-  },
-  {
-    label: '助手',
-    value: 'assistant'
-  },
-  {
-    label: '系统',
-    value: 'system'
-  }
-])
+const chatStore = useChatStore()
+const messages = messagesStore.initMessages()
+
+// const role_list = reactive([
+//   {
+//     label: '用户',
+//     value: 'user'
+//   },
+//   {
+//     label: '助手',
+//     value: 'assistant'
+//   },
+//   {
+//     label: '系统',
+//     value: 'system'
+//   }
+// ])
 
 const input = ref('')
 const sending = messagesStore.sending
@@ -28,6 +32,15 @@ const body = reactive({
   role: 'user',
   content: ''
 })
+
+const sendByKey = (event) => {
+  const { shiftKey, keyCode } = event
+  if (!shiftKey && keyCode === 13) {
+    event.stopPropagation()
+    event.preventDefault()
+    send()
+  }
+}
 
 const send = () => {
   if (input.value == '') {
@@ -48,45 +61,37 @@ const send = () => {
   body.content = messagesStore.getHistoryMsg('all')
   messagesStore.getMessage(body)
 }
+
+const openSideBarHandle = () => {
+  chatStore.openSideBar = !chatStore.openSideBar
+}
 </script>
 
 <template>
   <div class="chat flex flex-col h-full">
-    <p class="m-auto text-6xl font-semibold py-2 bg-clip-text text-transparent">ChatGPT</p>
-    <MessageBox ref="msgbox" :messages="messages" />
-    <div class="m-5 pb-5">
-      <el-row :gutter="10">
-        <el-col :span="2">
-          <el-select v-model="body.role" placeholder="角色">
-            <el-option
-              v-for="item in role_list"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-col>
-        <el-col :span="18">
-          <el-input
-            v-model="input"
-            :autosize="{ minRows: 1, maxRows: 4 }"
-            type="textarea"
-            placeholder="请输入"
-            maxlength="3000"
-            clearable
-            show-word-limit
-            resize="none"
-            @keyup.shift.enter="send"
-          />
-        </el-col>
-        <el-col :span="4">
-          <el-button color="#626aef" style="width: 100%; height: 100%" @click="send"
-            >发送</el-button
-          >
-        </el-col>
-      </el-row>
+    <p class="m-auto text-6xl font-semibold py-1 bg-clip-text text-transparent">ChatGPT</p>
+    <MessageBox :messages="messages" />
+    <div class="flex m-5">
+      <div class="flex items-center mr-4">
+        <el-button class="" @click="openSideBarHandle" circle :icon="Setting"></el-button>
+      </div>
+      <div class="flex gap-3 w-full">
+        <el-input
+          v-model="input"
+          :autosize="{ minRows: 1, maxRows: 4 }"
+          type="textarea"
+          placeholder="请输入 (使用Shift+Enter换行)"
+          maxlength="3000"
+          clearable
+          show-word-limit
+          resize="none"
+          @keydown="sendByKey"
+        />
+        <el-button color="#626aef" class="w-24" style="height: 100%" @click="send">发送</el-button>
+      </div>
     </div>
   </div>
+  <SideBar></SideBar>
 </template>
 
 <style scoped>
@@ -96,6 +101,6 @@ const send = () => {
 
 .chat > p {
   font-family: Inter;
-  background-image: linear-gradient(135deg, #756aee 52%, #ee756a 10%);
+  background-image: linear-gradient(135deg, #756aee 53%, #ee756a 10%);
 }
 </style>
