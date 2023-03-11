@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 import markdown from 'markdown-it'
 import hljs from 'markdown-it-highlightjs'
 import katex from 'markdown-it-katex'
+import md_tb from 'markdown-it-multimd-table'
 import { Edit, Fold, Expand, CloseBold } from '@element-plus/icons-vue'
 import chatgpt from '../assets/ChatGPT_white.png'
 import chatgpt_black from '../assets/ChatGPT.png'
@@ -22,10 +23,12 @@ const props = defineProps({
 const md = markdown({
   html: true,
   linkify: true,
-  breaks: true
+  typographer: true,
+  // breaks: true
 })
   .use(katex)
   .use(hljs)
+  .use(md_tb)
 
 const markdown_msg = computed(() => {
   return '<div>' + md.render(props.message.msg || '') + '</div>'
