@@ -17,7 +17,6 @@ const chatRequest = (data) => {
 }
 
 const axiosConfig = {
-  baseURL: env.apiURL || '/',
   headers: {
     'Content-Type': 'application/json'
   },
@@ -26,8 +25,14 @@ const axiosConfig = {
 
 const ChatGPTApi = axios.create(axiosConfig)
 
-export const post_GetMessage = (data, api_key = '', timeout = DEFAULT_TIMEOUT) => {
+export const post_GetMessage = (
+  data,
+  api_key = '',
+  api_url = env.apiURL,
+  timeout = DEFAULT_TIMEOUT
+) => {
   return ChatGPTApi.post('', data, {
+    baseURL: api_url,
     transformRequest: [chatRequest],
     timeout: timeout,
     headers: {

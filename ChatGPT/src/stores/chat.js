@@ -5,7 +5,6 @@ import { downloadJson, uploadJson } from '../utils/utils'
 export const useChatStore = defineStore(
   'chat',
   () => {
-    const openSideBar = ref(false)
     const currentChatIdx = ref(null)
     const chats = ref([])
 
@@ -74,7 +73,6 @@ export const useChatStore = defineStore(
 
     return {
       length,
-      openSideBar,
       currentChatIdx,
       chats,
       getCurrentChat,

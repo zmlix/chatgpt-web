@@ -2,12 +2,12 @@
 import { reactive, ref } from 'vue'
 import MessageBox from '../components/MessageBox.vue'
 import SideBar from '../components/SideBar.vue'
-import { useChatStore } from '../stores/chat'
 import { useMessagesStore } from '../stores/messages'
+import { useSysStore } from '../stores/sys'
 import { showMessage } from '../utils/utils'
 import { Setting } from '@element-plus/icons-vue'
 const messagesStore = useMessagesStore()
-const chatStore = useChatStore()
+const sysStore = useSysStore()
 const messages = messagesStore.initMessages()
 
 // const role_list = reactive([
@@ -63,7 +63,7 @@ const send = () => {
 }
 
 const openSideBarHandle = () => {
-  chatStore.openSideBar = !chatStore.openSideBar
+  sysStore.openSideBar = !sysStore.openSideBar
 }
 </script>
 

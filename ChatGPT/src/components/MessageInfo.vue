@@ -23,7 +23,7 @@ const props = defineProps({
 const md = markdown({
   html: true,
   linkify: true,
-  typographer: true,
+  typographer: true
   // breaks: true
 })
   .use(katex)
