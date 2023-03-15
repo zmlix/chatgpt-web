@@ -1,7 +1,8 @@
 # ChatGPT-Web
 
 - 这是一个基于OpenAI ChatGPT3.5 模型API的前端项目，可进行私有化部署
-- 基本功能可以在B站看 ![功能演示](https://www.bilibili.com/video/BV1Dv4y1j7vy/?share_source=copy_web&vd_source=3b1c0e37d84e6bc8d15aca417cb59494)
+- 基本功能可以在B站看 [功能演示](https://www.bilibili.com/video/BV1Dv4y1j7vy/?share_source=copy_web&vd_source=3b1c0e37d84e6bc8d15aca417cb59494)
+<iframe src="//player.bilibili.com/player.html?bvid=BV1Dv4y1j7vy&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 ## 项目功能
 
