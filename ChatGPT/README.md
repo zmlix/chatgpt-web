@@ -1,7 +1,7 @@
 # ChatGPT-Web
 
 - 这是一个基于OpenAI ChatGPT3.5 模型API的前端项目，可进行私有化部署
-- 本人的前端不是很好，全凭兴趣写的项目😀
+- 基本功能可以在B站看 ![功能演示](https://www.bilibili.com/video/BV1Dv4y1j7vy/?share_source=copy_web&vd_source=3b1c0e37d84e6bc8d15aca417cb59494)
 
 ## 项目功能
 
@@ -29,7 +29,7 @@
 
 ## 快速开始
 
-### · 本地部署
+### 本地部署
 - 安装依赖、打包
 ```sh
 npm install
@@ -50,6 +50,11 @@ python3 -m http.server
 npm install
 npm run dev
 ```
+
+## 开始使用
+
+- 使用需要提前注册OpenAI账号，在`https://platform.openai.com/account/api-keys`里获取API KEY，然后在系统配置里填入即可使用（需要翻墙或者代理）。
+
 ## 代理
 
 - 因为默认是使用OpenAI官网的API，所以需要开代理，相关配置在`env.js`文件里,`proxy`参考axios的代理配置写法

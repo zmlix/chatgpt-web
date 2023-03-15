@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { Operation } from '@element-plus/icons-vue'
 
 import { useSysStore } from '../stores/sys.js'
+import { env } from '../env'
 const sysStore = useSysStore()
 
 const setting = ref({
@@ -17,6 +18,9 @@ const openSettingDialogHandle = () => {
 }
 
 const enter = () => {
+  if (setting.value.api_url == '') {
+    setting.value.api_url = env.apiURL
+  }
   sysStore.set(setting.value.api_key, setting.value.api_url)
   sysStore.openSettingDialog = false
 }
@@ -31,7 +35,7 @@ const enter = () => {
       <div>
         <el-form label-position="top" label-width="100px" :model="setting">
           <el-form-item label="API URL">
-            <el-input v-model="setting.api_url" />
+            <el-input v-model="setting.api_url" placeholder="默认使用官方API" />
           </el-form-item>
           <el-form-item label="OPENAI_API_KEY">
             <el-input v-model="setting.api_key" placeholder="必须设置此项才能使用" />

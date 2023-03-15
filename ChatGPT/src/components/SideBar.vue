@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Plus, Download, Upload } from '@element-plus/icons-vue'
 import { showMessage } from '../utils/utils'
 import { useChatStore } from '../stores/chat'
@@ -31,14 +31,19 @@ const upload = (_, uploadFile) => {
   chatStore.uploadChats(uploadFile.raw)
 }
 
-const size = () => {
-  return window.innerWidth <= 768 ? '100%' : '350'
-}
+const size = ref(document.body.clientWidth <= 640 ? '100%' : '350px')
+onMounted(() => {
+  window.onresize = () => {
+    return (() => {
+      size.value = document.body.clientWidth <= 640 ? '100%' : '350px'
+    })()
+  }
+})
 </script>
 
 <template>
   <div>
-    <el-drawer v-model="sysStore.openSideBar" direction="ltr" :with-header="false" :size="size()">
+    <el-drawer v-model="sysStore.openSideBar" direction="ltr" :with-header="false" :size="size">
       <div class="flex flex-col h-full">
         <el-button @click="newChat" :icon="Plus" style="width: 100%">New Chat</el-button>
         <el-scrollbar>
@@ -63,6 +68,14 @@ const size = () => {
           <el-button @click="sysStore.openSideBar = false" type="danger" style="width: 100%"
             >关闭</el-button
           >
+          <span class="flex items-center justify-center text-sm mt-2 border-2 border-dotted"
+            >Star on &nbsp;<a
+              href="https://github.com/zmlix/chatgpt-web"
+              target="_blank"
+              class="text-blue-400"
+              >GitHub</a
+            >&nbsp; @zmlix
+          </span>
         </div>
       </template>
     </el-drawer>
