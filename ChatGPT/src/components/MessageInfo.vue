@@ -34,6 +34,10 @@ const markdown_msg = computed(() => {
   return '<div>' + md.render(props.message.msg || '') + '</div>'
 })
 
+const raw_msg = computed(() => {
+  return props.message.msg
+})
+
 const isMarkdown = ref(true)
 const isSkiped = ref(props.message.skip)
 const isCollapse = ref(false)
@@ -151,7 +155,7 @@ const editMsgEnter = () => {
         </div>
         <div class="mt-2 mb-1" v-show="!isCollapse">
           <el-divider style="margin: 0 0 5px 0"></el-divider>
-          <div v-if="!isMarkdown">{{ message.msg }}</div>
+          <div v-if="!isMarkdown" class="whitespace-pre-wrap">{{ raw_msg }}</div>
           <div v-else v-html="markdown_msg"></div>
         </div>
         <el-row :gutter="10" v-show="isEdit" class="mb-2">

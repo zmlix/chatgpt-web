@@ -8,9 +8,34 @@
   font-weight: normal;
   height: 100vh;
   width: 100vw;
+  color: #333333;
 }
 
 body {
   margin: 0;
   padding: 0;
+}
+
+table {
+  font-family: verdana, arial, sans-serif;
+  border-width: 1px;
+  border-color: #666666;
+  border-collapse: collapse;
+}
+
+table th {
+  border-width: 1px;
+  padding: 5px 5px;
+  border-style: solid;
+  border-color: #dcdfe6;
+  background-color: #e0e0e0;
+}
+
+table td {
+  border-width: 1px;
+  padding: 3px 3px;
+  border-style: solid;
+  border-color: #dcdfe6;
+  text-align: center;
+  background-color: #f2f2f2;
 }
