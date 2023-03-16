@@ -11,6 +11,7 @@ export const useSysStore = defineStore(
       api_key: env.OPENAI_API_KEY,
       api_url: env.apiURL
     })
+    const stream = ref(true)
 
     const API_KEY = computed(() => setting.value.api_key)
     const API_URL = computed(() => setting.value.api_url)
@@ -26,12 +27,13 @@ export const useSysStore = defineStore(
       setting,
       set,
       API_KEY,
-      API_URL
+      API_URL,
+      stream
     }
   },
   {
     persist: {
-      paths: ['setting']
+      paths: ['setting', 'stream']
     }
   }
 )

@@ -18,6 +18,7 @@
     "markdown-it-multimd-table": "^4.2.0",
     "pinia": "^2.0.32",
     "pinia-plugin-persistedstate": "^3.1.0",
+    "sse": "github:mpetazzoni/sse.js",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "vuedraggable": "^4.1.0",

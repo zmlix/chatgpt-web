@@ -35,7 +35,9 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      util: 'rollup-plugin-node-polyfills/polyfills/util',
+      events: 'rollup-plugin-node-polyfills/polyfills/events'
     }
   },
   build: {

@@ -29,6 +29,12 @@
 
 ## 快速开始
 
+- 版本 `node >= 18`
+
+```sh
+node -v
+```
+
 ### 本地部署
 - 安装依赖、打包
 ```sh
@@ -49,6 +55,12 @@ python3 -m http.server
 ```sh
 npm install
 npm run dev
+```
+
+- 如果出现`Cannot find module 'unplugin-auto-import/vite'`错误请先安装[ElementPlus](https://element-plus.gitee.io/zh-CN/guide/installation.html)和自动导入插件
+```sh
+npm install element-plus --save
+npm install -D unplugin-vue-components unplugin-auto-import
 ```
 
 ## 开始使用

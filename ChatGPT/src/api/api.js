@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { SSE } from 'sse'
 import { env } from '../env'
 
 const DEFAULT_TIMEOUT = 60 * 1000
@@ -31,12 +32,23 @@ export const post_GetMessage = (
   api_url = env.apiURL,
   timeout = DEFAULT_TIMEOUT
 ) => {
-  return ChatGPTApi.post('', data, {
-    baseURL: api_url,
-    transformRequest: [chatRequest],
-    timeout: timeout,
-    headers: {
-      Authorization: 'Bearer ' + api_key
-    }
-  })
+  if (data.stream) {
+    return new SSE(env.apiURL, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + api_key
+      },
+      payload: chatRequest(data),
+      method: 'POST'
+    })
+  } else {
+    return ChatGPTApi.post('', data, {
+      baseURL: api_url,
+      transformRequest: [chatRequest],
+      timeout: timeout,
+      headers: {
+        Authorization: 'Bearer ' + api_key
+      }
+    })
+  }
 }

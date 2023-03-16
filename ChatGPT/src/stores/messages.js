@@ -76,24 +76,56 @@ export const useMessagesStore = defineStore('messages', () => {
 
   async function getMessage(body, params) {
     setIsSending(true)
-    try {
-      const response = await post_GetMessage(body, sysStore.API_KEY, sysStore.API_URL)
-      const message = response.data.choices[0].message.content
-      pushMessage(message, { typ: 'chatgpt', status: 'success' }, params)
-    } catch (error) {
-      pushMessage(
-        '<font color="red">Error: 请求出错</font>',
-        { typ: 'sys', status: 'error' },
-        params
-      )
-      console.log(error)
-    } finally {
-      setIsSending(false)
+    body.stream = sysStore.stream
+
+    if (body.stream) {
+      const streamId = pushMessage('', { typ: 'chatgpt', status: 'success' }, params)
+      const sse = post_GetMessage(body, sysStore.API_KEY, sysStore.API_URL)
+      sse.addEventListener('message', (e) => {
+        if (e.data == '[DONE]') {
+          sse.close()
+          return
+        }
+        var payload = JSON.parse(e.data)
+        if ('content' in payload['choices'][0]['delta']) {
+          update(streamId, payload['choices'][0]['delta']['content'])
+        }
+      })
+      sse.addEventListener('readystatechange', (e) => {
+        if (e.readyState >= 2) {
+          setIsSending(false)
+        }
+      })
+      sse.addEventListener('error', (e) => {
+        console.log('error ', e)
+        sse.close()
+        set(streamId, {
+          msg: '<font color="red">Error: 请求出错</font>',
+          typ: 'sys',
+          status: 'error'
+        })
+      })
+      sse.stream()
+    } else {
+      try {
+        const response = await post_GetMessage(body, sysStore.API_KEY, sysStore.API_URL)
+        const message = response.data.choices[0].message.content
+        pushMessage(message, { typ: 'chatgpt', status: 'success' }, params)
+      } catch (error) {
+        pushMessage(
+          '<font color="red">Error: 请求出错</font>',
+          { typ: 'sys', status: 'error' },
+          params
+        )
+        console.log(error)
+      } finally {
+        setIsSending(false)
+      }
     }
   }
 
   function pushMessage(msg, info, params) {
-    push({ ...info, msg }, params)
+    return push({ ...info, msg }, params)
   }
 
   function push(msg, params = {}) {
@@ -115,6 +147,7 @@ export const useMessagesStore = defineStore('messages', () => {
       messages.value.push(msg)
     }
     setSendingId(msg.id)
+    return msg.id
   }
 
   function del(id) {
@@ -129,6 +162,14 @@ export const useMessagesStore = defineStore('messages', () => {
     const message = messages.value.find((message) => message.id === id)
     if (message) {
       Object.assign(message, options)
+    }
+    return messages
+  }
+
+  function update(id, msg) {
+    const message = messages.value.find((message) => message.id === id)
+    if (message) {
+      message.msg += msg
     }
     return messages
   }
