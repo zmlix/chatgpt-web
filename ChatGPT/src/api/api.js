@@ -33,7 +33,7 @@ export const post_GetMessage = (
   timeout = DEFAULT_TIMEOUT
 ) => {
   if (data.stream) {
-    return new SSE(env.apiURL, {
+    return new SSE(api_url, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + api_key
