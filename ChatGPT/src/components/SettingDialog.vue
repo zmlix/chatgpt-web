@@ -8,13 +8,15 @@ const sysStore = useSysStore()
 
 const setting = ref({
   api_url: '',
-  api_key: ''
+  api_key: '',
+  stream: true
 })
 
 const openSettingDialogHandle = () => {
   sysStore.openSettingDialog = true
   setting.value.api_key = sysStore.API_KEY
   setting.value.api_url = sysStore.API_URL
+  setting.value.stream = sysStore.stream
 }
 
 const enter = () => {
@@ -22,6 +24,7 @@ const enter = () => {
     setting.value.api_url = env.apiURL
   }
   sysStore.set(setting.value.api_key, setting.value.api_url)
+  sysStore.stream = setting.value.stream
   sysStore.openSettingDialog = false
 }
 </script>
@@ -38,7 +41,12 @@ const enter = () => {
             <el-input v-model="setting.api_url" placeholder="默认使用官方API" />
           </el-form-item>
           <el-form-item label="OPENAI_API_KEY">
-            <el-input v-model="setting.api_key" placeholder="必须设置此项才能使用" />
+            <el-input v-model="setting.api_key" placeholder="官方API必须设置此项才能使用" />
+          </el-form-item>
+        </el-form>
+        <el-form label-position="left" label-width="270px" :model="setting">
+          <el-form-item label="开启打字机效果(stream模式)">
+            <el-switch v-model="setting.stream" />
           </el-form-item>
         </el-form>
       </div>

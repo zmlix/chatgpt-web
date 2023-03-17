@@ -25,6 +25,23 @@ const axiosConfig = {
 }
 
 const ChatGPTApi = axios.create(axiosConfig)
+const ChatGPTSSEApi = (data, conf) => {
+  const headers =
+    'headers' in conf
+      ? {
+        'Content-Type': 'application/json',
+        Authorization: conf.headers.Authorization
+      }
+      : { 'Content-Type': 'application/json' }
+
+  const payload = conf.transformRequest.reduce((acc, transform) => transform(acc), data)
+
+  return new SSE(conf.baseURL, {
+    headers,
+    payload,
+    method: 'POST'
+  })
+}
 
 export const post_GetMessage = (
   data,
@@ -32,23 +49,19 @@ export const post_GetMessage = (
   api_url = env.apiURL,
   timeout = DEFAULT_TIMEOUT
 ) => {
+  const commonConf = {
+    baseURL: api_url,
+    transformRequest: [chatRequest],
+    timeout: timeout
+  }
+  const conf = api_key ? {
+    ...commonConf,
+    headers: { Authorization: 'Bearer ' + api_key }
+  } : commonConf
+  
   if (data.stream) {
-    return new SSE(api_url, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + api_key
-      },
-      payload: chatRequest(data),
-      method: 'POST'
-    })
+    return ChatGPTSSEApi(data, conf)
   } else {
-    return ChatGPTApi.post('', data, {
-      baseURL: api_url,
-      transformRequest: [chatRequest],
-      timeout: timeout,
-      headers: {
-        Authorization: 'Bearer ' + api_key
-      }
-    })
+    return ChatGPTApi.post('',data, conf)
   }
 }
