@@ -12,6 +12,7 @@
   "dependencies": {
     "@itisbit/markdown-it-katex": "^4.0.1",
     "axios": "^1.3.4",
+    "element-plus": "^2.3.0",
     "markdown-it": "^13.0.1",
     "markdown-it-highlightjs": "^4.0.1",
     "markdown-it-katex": "^2.0.3",
@@ -35,6 +36,8 @@
     "postcss": "^8.4.21",
     "prettier": "^2.8.4",
     "tailwindcss": "^3.2.7",
+    "unplugin-auto-import": "^0.15.1",
+    "unplugin-vue-components": "^0.24.1",
     "vite": "^4.1.4",
     "vite-plugin-style-import": "^2.0.0"
   }
