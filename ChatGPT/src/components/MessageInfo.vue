@@ -110,6 +110,13 @@ watch(
           })
           copyCodeDiv.appendChild(buttonElem)
           hljs_blocks[i].insertAdjacentElement('afterbegin', copyCodeDiv)
+          hljs_blocks[i].addEventListener('mouseover', () => {
+            console.log('mouseover')
+            copyCodeDiv.style.display = 'flex'
+          })
+          hljs_blocks[i].addEventListener('mouseout', () => {
+            copyCodeDiv.style.display = 'none'
+          })
         }
       }
     }
@@ -241,5 +248,6 @@ watch(
 .copy-code {
   display: flex;
   justify-content: flex-end;
+  float: right;
 }
 </style>
