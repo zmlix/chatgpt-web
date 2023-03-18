@@ -102,16 +102,19 @@ watch(
           buttonElem.addEventListener('click', async () => {
             try {
               await toClipboard(hljs_blocks[i])
+              console.log(hljs_blocks[i].children)
               showMessage('复制成功', 'success')
             } catch (e) {
               console.error(e)
               showMessage('复制失败', 'error')
             }
           })
+          buttonElem.addEventListener('mouseover', () => {
+            copyCodeDiv.style.display = 'flex'
+          })
           copyCodeDiv.appendChild(buttonElem)
-          hljs_blocks[i].insertAdjacentElement('afterbegin', copyCodeDiv)
+          hljs_blocks[i].insertAdjacentElement('beforeBegin', copyCodeDiv)
           hljs_blocks[i].addEventListener('mouseover', () => {
-            console.log('mouseover')
             copyCodeDiv.style.display = 'flex'
           })
           hljs_blocks[i].addEventListener('mouseout', () => {
@@ -248,6 +251,9 @@ watch(
 .copy-code {
   display: flex;
   justify-content: flex-end;
-  float: right;
+  position: relative;
+  top: 12px;
+  right: 5px;
+  height: 0px;
 }
 </style>
