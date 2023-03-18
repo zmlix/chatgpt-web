@@ -1,6 +1,6 @@
 <script setup>
 import { Refresh, UserFilled } from '@element-plus/icons-vue'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import markdown from 'markdown-it'
 import hljs from 'markdown-it-highlightjs'
 import katex from 'markdown-it-katex'
@@ -8,6 +8,7 @@ import md_tb from 'markdown-it-multimd-table'
 import { Edit, Fold, Expand, CloseBold } from '@element-plus/icons-vue'
 import chatgpt from '../assets/ChatGPT_white.png'
 import chatgpt_black from '../assets/ChatGPT.png'
+import useClipboard from 'vue-clipboard3'
 import { showMessage, getCurrentTime } from '../utils/utils'
 import { useMessagesStore } from '../stores/messages'
 const messagesStore = useMessagesStore()
@@ -23,8 +24,8 @@ const props = defineProps({
 const md = markdown({
   html: true,
   linkify: true,
-  typographer: true
-  // breaks: true
+  typographer: true,
+  breaks: true
 })
   .use(katex)
   .use(hljs)
@@ -83,6 +84,37 @@ const editMsgEnter = () => {
   messagesStore.set(props.message.id, { msg: new_msg.value, time: new Date() })
   isEdit.value = false
 }
+
+const showMsgRef = ref(null)
+const { toClipboard } = useClipboard()
+watch(
+  () => showMsgRef.value,
+  (isShowMsg) => {
+    if (isShowMsg) {
+      const hljs_blocks = showMsgRef.value.getElementsByClassName('hljs')
+      if (hljs_blocks.length) {
+        for (let i = 0; i < hljs_blocks.length; i++) {
+          const copyCodeDiv = document.createElement('div')
+          copyCodeDiv.classList.add('copy-code')
+          const buttonElem = document.createElement('button')
+          buttonElem.classList.add('el-button', 'el-button--small')
+          buttonElem.innerHTML = '<span>复制代码</span>'
+          buttonElem.addEventListener('click', async () => {
+            try {
+              await toClipboard(hljs_blocks[i])
+              showMessage('复制成功', 'success')
+            } catch (e) {
+              console.error(e)
+              showMessage('复制失败', 'error')
+            }
+          })
+          copyCodeDiv.appendChild(buttonElem)
+          hljs_blocks[i].insertAdjacentElement('afterbegin', copyCodeDiv)
+        }
+      }
+    }
+  }
+)
 </script>
 
 <template>
@@ -156,7 +188,7 @@ const editMsgEnter = () => {
         <div class="mt-2 mb-1" v-show="!isCollapse">
           <el-divider style="margin: 0 0 5px 0"></el-divider>
           <div v-if="!isMarkdown" class="whitespace-pre-wrap">{{ raw_msg }}</div>
-          <div v-else v-html="markdown_msg"></div>
+          <div v-else v-html="markdown_msg" ref="showMsgRef"></div>
         </div>
         <el-row :gutter="10" v-show="isEdit" class="mb-2">
           <el-col :span="21">
@@ -204,5 +236,10 @@ const editMsgEnter = () => {
   font-size: 14px;
   max-width: 100%;
   min-height: 30px;
+}
+
+.copy-code {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

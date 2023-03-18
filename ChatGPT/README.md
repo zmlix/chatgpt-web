@@ -5,6 +5,7 @@
 
 ## 更新日志
 
+- 3/19 增加代码复制功能
 - 3/18 增加余额查询功能，需配置`OPENAI_API_KEY`
 
 ## 项目功能
@@ -23,13 +24,6 @@
     - 拖拽 (可交换问答的顺序)
 - 可前端设置OPENAI_API_KEY
 - 响应式、支持移动端
-
-![公式代码渲染](./imgs/a.png)
-![图像渲染](./imgs/b.png)
-![修改折叠跳过](./imgs/c.png)
-![修改结果](./imgs/d.png)
-![会话面板](./imgs/e.png)
-![移动设备](./imgs/f.png)
 
 ## 快速开始
 
@@ -95,3 +89,12 @@ docker run -p 5200:5200 -d chatgpt-web
 
 - 因为是前端直接使用axios请求API，所以会暴露`OPENAI_API_KEY`，请注意自己的`OPENAI_API_KEY`的安全
 - 如果想不暴露`OPENAI_API_KEY`可以自己增加后端，在`env.js`文件里修改`apiURL`,`OPENAI_API_KEY`使用自己的JWT验证即可。前端请求参数和官网格式基本一致。
+
+## 界面/功能截图
+
+![公式代码渲染](./imgs/a.png)
+![图像渲染](./imgs/b.png)
+![修改折叠跳过](./imgs/c.png)
+![修改结果](./imgs/d.png)
+![会话面板](./imgs/e.png)
+![移动设备](./imgs/f.png)
