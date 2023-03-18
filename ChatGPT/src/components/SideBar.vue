@@ -1,10 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { Plus, Download, Upload } from '@element-plus/icons-vue'
+import { Plus, Download, Upload, Refresh } from '@element-plus/icons-vue'
 import { showMessage } from '../utils/utils'
 import { useChatStore } from '../stores/chat'
 import { useSysStore } from '../stores/sys'
 import { useMessagesStore } from '../stores/messages'
+import { get_GetCreditGrants } from '../api/api'
 import draggable from 'vuedraggable'
 import ChatCard from './ChatCard.vue'
 import SettingDialog from './SettingDialog.vue'
@@ -14,6 +15,7 @@ const sysStore = useSysStore()
 
 const chats = chatStore.chats
 const uploadChatList = ref([])
+const isGetCreditGrants = ref(false)
 
 const newChat = () => {
   if (messagesStore.sending.isSending) {
@@ -31,6 +33,24 @@ const upload = (_, uploadFile) => {
   chatStore.uploadChats(uploadFile.raw)
 }
 
+const getCreditGrants = async () => {
+  if (isGetCreditGrants.value) {
+    showMessage('正在获取余额中...', 'info')
+    return
+  }
+  sysStore.creditGrants = '获取中...'
+  isGetCreditGrants.value = true
+  try {
+    const response = await get_GetCreditGrants(sysStore.API_KEY)
+    sysStore.creditGrants = response.data.total_available + ' USD'
+  } catch (error) {
+    sysStore.creditGrants = '获取失败'
+    console.log(error)
+  } finally {
+    isGetCreditGrants.value = false
+  }
+}
+
 const size = ref(document.body.clientWidth <= 640 ? '100%' : '350px')
 onMounted(() => {
   window.onresize = () => {
@@ -45,6 +65,12 @@ onMounted(() => {
   <div>
     <el-drawer v-model="sysStore.openSideBar" direction="ltr" :with-header="false" :size="size">
       <div class="flex flex-col h-full">
+        <div
+          class="flex items-center justify-between h-8 mb-2 pb-2 pl-2 border-b border-dashed border-b-gray-400"
+        >
+          <span class="text-sm">余额: {{ sysStore.creditGrants }}</span>
+          <el-button size="small" :icon="Refresh" @click="getCreditGrants">刷新余额</el-button>
+        </div>
         <el-button @click="newChat" :icon="Plus" style="width: 100%">New Chat</el-button>
         <el-scrollbar>
           <draggable :list="chats" handle=".drag-chat" item-key="idx">

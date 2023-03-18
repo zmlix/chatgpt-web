@@ -3,6 +3,10 @@
 - 这是一个基于OpenAI ChatGPT3.5 模型API的前端项目，可进行私有化部署
 - 基本功能可以在B站看 [功能演示](https://www.bilibili.com/video/BV1Dv4y1j7vy/?share_source=copy_web&vd_source=3b1c0e37d84e6bc8d15aca417cb59494)
 
+## 更新日志
+
+- 3/18 增加余额查询功能，需配置`OPENAI_API_KEY`
+
 ## 项目功能
 
 - 基本问答界面
@@ -63,6 +67,15 @@ npm install element-plus --save
 npm install -D unplugin-vue-components unplugin-auto-import
 ```
 
+### 使用Docker部署
+
+```sh
+docker build -t chatgpt-web .
+docker run -p 5200:5200 -d chatgpt-web
+```
+
+- 访问主机地址`http://localhost:5200`即可
+
 ## 开始使用
 
 - 使用需要提前注册OpenAI账号，在`https://platform.openai.com/account/api-keys`里获取API KEY，然后在系统配置里填入即可使用（需要翻墙或者代理）。
@@ -71,6 +84,7 @@ npm install -D unplugin-vue-components unplugin-auto-import
 
 - 因为默认是使用OpenAI官网的API，所以需要开代理，相关配置在`env.js`文件里,`proxy`参考axios的代理配置写法
 - 社区有大佬分享的代理地址，只要修改`env.js`文件里的`apiURL`即可，但是请注意安全，你的`OPENAI_API_KEY`可能会泄露。
+- [ChatGPTAPIFree](https://github.com/ayaka14732/ChatGPTAPIFree)提供了免费的反代地址，可在前端配置中修改`apiURL`，无需`OPENAI_API_KEY`，稳定性和安全性自己衡量。
 
 ## 上下文会话是怎么实现的？
 

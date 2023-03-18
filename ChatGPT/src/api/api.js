@@ -29,9 +29,9 @@ const ChatGPTSSEApi = (data, conf) => {
   const headers =
     'headers' in conf
       ? {
-        'Content-Type': 'application/json',
-        Authorization: conf.headers.Authorization
-      }
+          'Content-Type': 'application/json',
+          Authorization: conf.headers.Authorization
+        }
       : { 'Content-Type': 'application/json' }
 
   const payload = conf.transformRequest.reduce((acc, transform) => transform(acc), data)
@@ -54,14 +54,25 @@ export const post_GetMessage = (
     transformRequest: [chatRequest],
     timeout: timeout
   }
-  const conf = api_key ? {
-    ...commonConf,
-    headers: { Authorization: 'Bearer ' + api_key }
-  } : commonConf
-  
+  const conf = api_key
+    ? {
+        ...commonConf,
+        headers: { Authorization: 'Bearer ' + api_key }
+      }
+    : commonConf
+
   if (data.stream) {
     return ChatGPTSSEApi(data, conf)
   } else {
-    return ChatGPTApi.post('',data, conf)
+    return ChatGPTApi.post('', data, conf)
   }
+}
+
+const CreditGrantsApi = axios.create(axiosConfig)
+export const get_GetCreditGrants = (api_key) => {
+  return CreditGrantsApi.get('https://api.openai.com/dashboard/billing/credit_grants', {
+    headers: {
+      Authorization: 'Bearer ' + api_key
+    }
+  })
 }

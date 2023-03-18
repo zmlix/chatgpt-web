@@ -7,6 +7,7 @@ export const useSysStore = defineStore(
   () => {
     const openSideBar = ref(false)
     const openSettingDialog = ref(false)
+    const creditGrants = ref('需配置OPENAI_API_KEY')
     const setting = ref({
       api_key: env.OPENAI_API_KEY,
       api_url: env.apiURL
@@ -28,12 +29,13 @@ export const useSysStore = defineStore(
       set,
       API_KEY,
       API_URL,
-      stream
+      stream,
+      creditGrants
     }
   },
   {
     persist: {
-      paths: ['setting', 'stream']
+      paths: ['setting', 'stream', 'creditGrants']
     }
   }
 )
