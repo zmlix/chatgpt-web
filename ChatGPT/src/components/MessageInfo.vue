@@ -88,7 +88,7 @@ const editMsgEnter = () => {
 const showMsgRef = ref(null)
 const { toClipboard } = useClipboard()
 watch(
-  () => showMsgRef.value,
+  () => sending.isSending || showMsgRef.value,
   (isShowMsg) => {
     if (isShowMsg) {
       const hljs_blocks = showMsgRef.value.getElementsByClassName('hljs')
