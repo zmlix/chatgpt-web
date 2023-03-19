@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { get_GetPrompts } from '../api/api'
 import { useSysStore } from '../stores/sys'
+import { ElLoading } from 'element-plus'
 import draggable from 'vuedraggable'
 import PromptCard from './PromptCard.vue'
 const sysStore = useSysStore()
@@ -10,6 +11,10 @@ const isOpen = ref(false)
 const promptList = sysStore.promptList
 
 const getPrompts = async () => {
+  const loading = ElLoading.service({
+    target: document.querySelector('.prompt-store'),
+    fullscreen: false
+  })
   try {
     const response = await get_GetPrompts()
     const webPromptList = response.data.map((item) => {
@@ -19,10 +24,16 @@ const getPrompts = async () => {
     sysStore.setPromptList(webPromptList)
   } catch (error) {
     console.log(error)
+  } finally {
+    loading.close()
   }
 }
 
-getPrompts()
+watch(isOpen, (val) => {
+  if (val) {
+    getPrompts()
+  }
+})
 
 const size = ref(document.body.clientWidth <= 640 ? '100%' : '350px')
 onMounted(() => {
@@ -44,7 +55,7 @@ onMounted(() => {
       :size="size"
       @closed="() => (isOpen = false)"
     >
-      <el-scrollbar>
+      <el-scrollbar class="prompt-store">
         <draggable :list="promptList" handle=".drag-prompt" item-key="idx">
           <template #item="{ element }">
             <PromptCard :prompt="element" @close-store="() => (isOpen = false)"></PromptCard>

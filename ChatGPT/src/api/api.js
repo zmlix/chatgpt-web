@@ -80,6 +80,9 @@ export const get_GetCreditGrants = (api_key) => {
 const PromptApi = axios.create(axiosConfig)
 export const get_GetPrompts = () => {
   return PromptApi.get(
-    'https://raw.githubusercontent.com/PlexPt/awesome-chatgpt-prompts-zh/main/prompts-zh.json'
+    'https://raw.githubusercontent.com/PlexPt/awesome-chatgpt-prompts-zh/main/prompts-zh.json',
+    {
+      timeout: DEFAULT_TIMEOUT
+    }
   )
 }
