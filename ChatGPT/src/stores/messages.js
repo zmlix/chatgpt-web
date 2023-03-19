@@ -197,6 +197,7 @@ export const useMessagesStore = defineStore('messages', () => {
     delMessages,
     getMessage,
     push,
+    pushMessage,
     del,
     set,
     getHistoryMsg,

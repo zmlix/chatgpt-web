@@ -13,9 +13,15 @@ export const useSysStore = defineStore(
       api_url: env.apiURL
     })
     const stream = ref(true)
+    const promptList = ref([])
 
     const API_KEY = computed(() => setting.value.api_key)
     const API_URL = computed(() => setting.value.api_url)
+
+    function setPromptList(webPromptList) {
+      promptList.value = promptList.value.filter((item) => item.type === 'user')
+      promptList.value = promptList.value.concat(webPromptList)
+    }
 
     function set(key, url) {
       setting.value.api_key = key
@@ -30,12 +36,14 @@ export const useSysStore = defineStore(
       API_KEY,
       API_URL,
       stream,
-      creditGrants
+      creditGrants,
+      promptList,
+      setPromptList
     }
   },
   {
     persist: {
-      paths: ['setting', 'stream', 'creditGrants']
+      paths: ['setting', 'stream', 'creditGrants', 'promptList']
     }
   }
 )

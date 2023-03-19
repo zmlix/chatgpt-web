@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { Plus, Download, Upload, Refresh } from '@element-plus/icons-vue'
+import { Plus, Download, Upload, Refresh, ArrowDownBold } from '@element-plus/icons-vue'
 import { showMessage } from '../utils/utils'
 import { useChatStore } from '../stores/chat'
 import { useSysStore } from '../stores/sys'
@@ -9,6 +9,7 @@ import { get_GetCreditGrants } from '../api/api'
 import draggable from 'vuedraggable'
 import ChatCard from './ChatCard.vue'
 import SettingDialog from './SettingDialog.vue'
+import PromptStore from './PromptStore.vue'
 const chatStore = useChatStore()
 const messagesStore = useMessagesStore()
 const sysStore = useSysStore()
@@ -71,27 +72,37 @@ onMounted(() => {
           <span class="text-sm">余额: {{ sysStore.creditGrants }}</span>
           <el-button size="small" :icon="Refresh" @click="getCreditGrants">刷新余额</el-button>
         </div>
-        <el-button @click="newChat" :icon="Plus" style="width: 100%">New Chat</el-button>
+        <div class="flex items-center">
+          <el-button @click="newChat" :icon="Plus" style="width: 100%">New Chat</el-button>
+          <el-popover placement="left" trigger="click" width="190">
+            <template #reference>
+              <el-button :icon="ArrowDownBold" circle />
+            </template>
+            <template #default>
+              <div class="flex gap-2">
+                <el-button :icon="Download" @click="download">导出</el-button>
+                <el-upload v-model:file-list="uploadChatList" :on-progress="upload" class="flex">
+                  <el-button :icon="Upload">导入</el-button>
+                </el-upload>
+              </div>
+            </template>
+          </el-popover>
+        </div>
         <el-scrollbar>
           <draggable :list="chats" handle=".drag-chat" item-key="idx">
             <template #item="{ element }">
-              <div>
-                <ChatCard :chat="element"></ChatCard>
-              </div>
+              <ChatCard :chat="element"></ChatCard>
             </template>
           </draggable>
         </el-scrollbar>
         <div class="flex gap-1">
           <SettingDialog></SettingDialog>
-          <el-button :icon="Download" style="width: 100%" @click="download">导出</el-button>
-          <el-upload v-model:file-list="uploadChatList" :on-progress="upload">
-            <el-button :icon="Upload" style="width: 100%">导入</el-button>
-          </el-upload>
+          <PromptStore></PromptStore>
         </div>
       </div>
       <template #footer>
         <div style="flex: auto">
-          <el-button @click="sysStore.openSideBar = false" type="danger" style="width: 100%"
+          <el-button @click="() => (sysStore.openSideBar = false)" type="danger" style="width: 100%"
             >关闭</el-button
           >
           <span class="flex items-center justify-center text-sm mt-2 border-2 border-dotted"
