@@ -17,7 +17,6 @@ const getPrompts = async () => {
       return item
     })
     sysStore.setPromptList(webPromptList)
-    console.log('PromptList', sysStore.promptList, promptList)
   } catch (error) {
     console.log(error)
   }
