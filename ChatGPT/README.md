@@ -3,6 +3,13 @@
 - 这是一个基于OpenAI ChatGPT3.5 模型API的前端项目，可进行私有化部署
 - 基本功能可以在B站看 [功能演示](https://www.bilibili.com/video/BV1Dv4y1j7vy/?share_source=copy_web&vd_source=3b1c0e37d84e6bc8d15aca417cb59494)
 
+## 更新日志
+
+- 3/21 增加停止请求按钮，Prompt搜索功能
+- 3/20 增加Prompt商城功能
+- 3/19 增加代码复制功能
+- 3/18 增加余额查询功能，需配置`OPENAI_API_KEY`
+
 ## 项目功能
 
 - 基本问答界面
