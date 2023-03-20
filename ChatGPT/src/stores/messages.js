@@ -1,9 +1,10 @@
 import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { random32BitNumber } from '../utils/utils.js'
-import { post_GetMessage } from '../api/api.js'
+import { ChatGPTApiSource, post_GetMessage } from '../api/api.js'
 import { useChatStore } from './chat.js'
 import { useSysStore } from './sys.js'
+import axios from 'axios'
 
 export const useMessagesStore = defineStore('messages', () => {
   const chatStore = useChatStore()
@@ -22,6 +23,9 @@ export const useMessagesStore = defineStore('messages', () => {
 
   function setIsSending(val) {
     sending.isSending = val
+    if (!val) {
+      ChatGPTApiSource.cancel('stoped Api')
+    }
   }
 
   function setSendingId(val) {
@@ -82,7 +86,8 @@ export const useMessagesStore = defineStore('messages', () => {
       const streamId = pushMessage('', { typ: 'chatgpt', status: 'success' }, params)
       const sse = post_GetMessage(body, sysStore.API_KEY, sysStore.API_URL)
       sse.addEventListener('message', (e) => {
-        if (e.data == '[DONE]') {
+        if (e.data == '[DONE]' || !sending.isSending) {
+          console.log('stoped SSE', !sending.isSending)
           sse.close()
           return
         }
@@ -112,11 +117,19 @@ export const useMessagesStore = defineStore('messages', () => {
         const message = response.data.choices[0].message.content
         pushMessage(message, { typ: 'chatgpt', status: 'success' }, params)
       } catch (error) {
-        pushMessage(
-          '<font color="red">Error: 请求出错</font>',
-          { typ: 'sys', status: 'error' },
-          params
-        )
+        if (axios.isCancel(error)) {
+          pushMessage(
+            '<font color="red">Error: 请求中断</font>',
+            { typ: 'sys', status: 'error' },
+            params
+          )
+        } else {
+          pushMessage(
+            '<font color="red">Error: 请求出错</font>',
+            { typ: 'sys', status: 'error' },
+            params
+          )
+        }
         console.log(error)
       } finally {
         setIsSending(false)

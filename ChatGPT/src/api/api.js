@@ -43,6 +43,8 @@ const ChatGPTSSEApi = (data, conf) => {
   })
 }
 
+const cancelToken = axios.CancelToken
+export const ChatGPTApiSource = cancelToken.source()
 export const post_GetMessage = (
   data,
   api_key = '',
@@ -64,7 +66,7 @@ export const post_GetMessage = (
   if (data.stream) {
     return ChatGPTSSEApi(data, conf)
   } else {
-    return ChatGPTApi.post('', data, conf)
+    return ChatGPTApi.post('', data, { ...conf, ...{ cancelToken: ChatGPTApiSource.token } })
   }
 }
 

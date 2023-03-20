@@ -2,6 +2,7 @@
 import { reactive, ref } from 'vue'
 import MessageBox from '../components/MessageBox.vue'
 import SideBar from '../components/SideBar.vue'
+import StopRequest from '../components/StopRequest.vue'
 import { useMessagesStore } from '../stores/messages'
 import { useSysStore } from '../stores/sys'
 import { showMessage } from '../utils/utils'
@@ -71,6 +72,7 @@ const openSideBarHandle = () => {
   <div class="chat flex flex-col h-full">
     <p class="m-auto text-6xl font-semibold py-1 bg-clip-text text-transparent">ChatGPT</p>
     <MessageBox :messages="messages" />
+    <StopRequest></StopRequest>
     <div class="flex m-5">
       <div class="flex items-center mr-4">
         <el-button class="" @click="openSideBarHandle" circle :icon="Setting"></el-button>
