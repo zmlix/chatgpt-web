@@ -67,6 +67,8 @@ docker run --name chatgpt-web --rm -it -p 5200:5200 -d chatgpt-web
 
 #### Docker Hub
 
+[Docker Hub](https://hub.docker.com/r/loewe24/chatgpt-web/tags)
+
 ```sh
 docker pull loewe24/chatgpt-web:latest
 ```
