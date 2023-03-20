@@ -43,25 +43,39 @@ const isMarkdown = ref(true)
 const isSkiped = ref(props.message.skip)
 const isCollapse = ref(false)
 
+const checkIsSending = () => {
+  if (sending.isSending) {
+    showMessage('请等待回答完毕', 'error')
+    return true
+  }
+  return false
+}
+
+const checkInput = () => {
+  if (props.message.msg == '') {
+    showMessage('请输入内容', 'error')
+    return true
+  }
+  return false
+}
+
 const delMsg = () => {
+  if (checkIsSending()) return
   messagesStore.del(props.message.id)
 }
 
-const setMsg = (val) => {
-  console.log(props.message.id, 'setMsg', val)
+const skipMsg = (val) => {
+  if (checkIsSending()) {
+    isSkiped.value = !isSkiped.value
+    return
+  }
+  console.log(props.message.id, 'skipMsg', val)
   messagesStore.set(props.message.id, { skip: val })
 }
 
 const reSendMsg = () => {
   console.log('reSendMsg...')
-  if (props.message.msg == '') {
-    showMessage('请输入内容', 'error')
-    return
-  }
-  if (sending.isSending) {
-    showMessage('请等待回答完毕', 'error')
-    return
-  }
+  if (checkIsSending() || checkInput()) return
   const msg_id = props.message.id
   messagesStore.setSendingId(msg_id)
   messagesStore.set(msg_id, { typ: 'user' })
@@ -75,6 +89,7 @@ const new_msg = ref('')
 const isEdit = ref(false)
 const editMsg = () => {
   console.log('editMsg...')
+  if (checkIsSending()) return
   new_msg.value = props.message.msg
   isEdit.value = !isEdit.value
 }
@@ -175,7 +190,7 @@ watch(
               active-text="跳过"
               inactive-text="跳过"
               style="height: 5px"
-              @change="setMsg"
+              @change="skipMsg"
             />
             <div class="p-1">
               <el-link

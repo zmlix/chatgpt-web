@@ -3,12 +3,14 @@ import { ref, onMounted, watch } from 'vue'
 import { get_GetPrompts } from '../api/api'
 import { useSysStore } from '../stores/sys'
 import { ElLoading } from 'element-plus'
+import { Search } from '@element-plus/icons-vue'
 import draggable from 'vuedraggable'
 import PromptCard from './PromptCard.vue'
 const sysStore = useSysStore()
 const isOpen = ref(false)
 
 const promptList = sysStore.promptList
+const prompts = ref(promptList)
 
 const getPrompts = async () => {
   const loading = ElLoading.service({
@@ -25,6 +27,7 @@ const getPrompts = async () => {
   } catch (error) {
     console.log(error)
   } finally {
+    prompts.value = promptList
     loading.close()
   }
 }
@@ -43,6 +46,13 @@ onMounted(() => {
     })()
   }
 })
+
+const input = ref('')
+const search = (val) => {
+  prompts.value = promptList.filter(
+    (item) => item.act.toLowerCase().indexOf(val.toLowerCase()) >= 0
+  )
+}
 </script>
 
 <template>
@@ -54,9 +64,13 @@ onMounted(() => {
       :with-header="false"
       :size="size"
       @closed="() => (isOpen = false)"
+      class="flex"
     >
+      <div class="m-1">
+        <el-input v-model="input" placeholder="搜索Prompt" :prefix-icon="Search" @input="search" />
+      </div>
       <el-scrollbar class="prompt-store">
-        <draggable :list="promptList" handle=".drag-prompt" item-key="idx">
+        <draggable :list="prompts" handle=".drag-prompt" item-key="idx">
           <template #item="{ element }">
             <PromptCard :prompt="element" @close-store="() => (isOpen = false)"></PromptCard>
           </template>
@@ -70,3 +84,10 @@ onMounted(() => {
     </el-drawer>
   </div>
 </template>
+
+<style>
+.el-drawer__body {
+  display: flex;
+  flex-direction: column;
+}
+</style>
