@@ -30,6 +30,8 @@ const usePrompt = async () => {
     showMessage('请等待回答完毕', 'error')
     return
   }
+  emit('close-store')
+  sysStore.openSideBar = false
   try {
     messagesStore.newMessages()
     const msg_id = messagesStore.pushMessage(props.prompt.prompt, {
@@ -43,9 +45,6 @@ const usePrompt = async () => {
   } catch (error) {
     showMessage('失败', 'error')
     console.log(error)
-  } finally {
-    emit('close-store')
-    sysStore.openSideBar = false
   }
 }
 </script>

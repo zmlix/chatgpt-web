@@ -34,7 +34,9 @@ const getPrompts = async () => {
 
 watch(isOpen, (val) => {
   if (val) {
-    getPrompts()
+    setTimeout(() => {
+      getPrompts()
+    }, 500)
   }
 })
 
