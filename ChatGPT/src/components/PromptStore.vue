@@ -14,7 +14,7 @@ const prompts = ref(promptList)
 
 const getPrompts = async () => {
   const loading = ElLoading.service({
-    target: document.querySelector('.prompt-store'),
+    target: '.prompt-store' || document.querySelector('.prompt-store'),
     fullscreen: false
   })
   try {

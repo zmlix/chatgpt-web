@@ -1,11 +1,13 @@
 import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { random32BitNumber } from '../utils/utils.js'
-import { ChatGPTApiSource, post_GetMessage } from '../api/api.js'
+import { post_GetMessage } from '../api/api.js'
 import { useChatStore } from './chat.js'
 import { useSysStore } from './sys.js'
 import axios from 'axios'
 
+const cancelToken = axios.CancelToken
+const ChatGPTApiSource = ref(null)
 export const useMessagesStore = defineStore('messages', () => {
   const chatStore = useChatStore()
   const sysStore = useSysStore()
@@ -24,7 +26,7 @@ export const useMessagesStore = defineStore('messages', () => {
   function setIsSending(val) {
     sending.isSending = val
     if (!val) {
-      ChatGPTApiSource.cancel('stoped Api')
+      ChatGPTApiSource.value.cancel('stoped Api')
     }
   }
 
@@ -113,7 +115,13 @@ export const useMessagesStore = defineStore('messages', () => {
       sse.stream()
     } else {
       try {
-        const response = await post_GetMessage(body, sysStore.API_KEY, sysStore.API_URL)
+        ChatGPTApiSource.value = cancelToken.source()
+        const response = await post_GetMessage(
+          body,
+          sysStore.API_KEY,
+          sysStore.API_URL,
+          ChatGPTApiSource.value.token
+        )
         const message = response.data.choices[0].message.content
         pushMessage(message, { typ: 'chatgpt', status: 'success' }, params)
       } catch (error) {
