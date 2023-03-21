@@ -12,7 +12,6 @@ const stop = () => {
   <div
     v-show="messagesStore.sending.isSending"
     class="flex items-center justify-center w-full h-8 mt-3 fixed bottom-20"
-    style="z-index: 9999"
   >
     <div
       class="flex items-center justify-center w-28 h-full bg-indigo-500 rounded text-white hover:cursor-pointer active:bg-indigo-600"

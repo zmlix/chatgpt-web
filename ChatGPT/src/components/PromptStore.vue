@@ -1,24 +1,35 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { get_GetPrompts } from '../api/api'
 import { useSysStore } from '../stores/sys'
 import { ElLoading } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import draggable from 'vuedraggable'
 import PromptCard from './PromptCard.vue'
+import axios from 'axios'
+
+defineProps({
+  size: {
+    type: String,
+    required: true
+  }
+})
+
+const cancelToken = axios.CancelToken
 const sysStore = useSysStore()
 const isOpen = ref(false)
 
 const promptList = sysStore.promptList
 const prompts = ref(promptList)
 
-const getPrompts = async () => {
+const source = ref(null)
+const getPrompts = async (cancelToken) => {
   const loading = ElLoading.service({
     target: '.prompt-store' || document.querySelector('.prompt-store'),
     fullscreen: false
   })
   try {
-    const response = await get_GetPrompts()
+    const response = await get_GetPrompts(cancelToken)
     const webPromptList = response.data.map((item) => {
       item.type = 'web'
       return item
@@ -35,17 +46,13 @@ const getPrompts = async () => {
 watch(isOpen, (val) => {
   if (val) {
     setTimeout(() => {
-      getPrompts()
+      source.value = cancelToken.source()
+      getPrompts(source.value.token)
     }, 500)
-  }
-})
-
-const size = ref(document.body.clientWidth <= 640 ? '100%' : '350px')
-onMounted(() => {
-  window.onresize = () => {
-    return (() => {
-      size.value = document.body.clientWidth <= 640 ? '100%' : '350px'
-    })()
+  } else {
+    setTimeout(() => {
+      source.value.cancel()
+    }, 500)
   }
 })
 

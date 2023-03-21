@@ -210,8 +210,8 @@ watch(
             </div>
           </div>
         </div>
-        <div class="mt-2 mb-1" v-show="!isCollapse">
-          <el-divider style="margin: 0 0 5px 0"></el-divider>
+        <el-divider style="margin: 5px"></el-divider>
+        <div class="mt-2 mb-1 overflow-x-auto" v-show="!isCollapse">
           <div v-if="!isMarkdown" class="whitespace-pre-wrap">{{ raw_msg }}</div>
           <div v-else v-html="markdown_msg" ref="showMsgRef"></div>
         </div>
@@ -237,7 +237,7 @@ watch(
       </div>
     </div>
     <div
-      class="message-box-loading h-16"
+      class="message-box-loading h-16 z-0"
       v-loading="sending.isSending"
       v-show="sending.isSending && sending.id == message.id"
     ></div>

@@ -95,9 +95,9 @@ onMounted(() => {
             </template>
           </draggable>
         </el-scrollbar>
-        <div class="flex gap-1">
+        <div class="flex gap-1 relative top-3">
           <SettingDialog></SettingDialog>
-          <PromptStore></PromptStore>
+          <PromptStore :size="size"></PromptStore>
         </div>
       </div>
       <template #footer>
