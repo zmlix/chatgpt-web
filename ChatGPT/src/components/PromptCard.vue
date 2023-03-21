@@ -7,7 +7,7 @@ const messagesStore = useMessagesStore()
 const sysStore = useSysStore()
 const { toClipboard } = useClipboard()
 
-const emit = defineEmits(['close-store'])
+const emit = defineEmits(['close-store', 'edit-prompt'])
 const props = defineProps({
   prompt: {
     type: Object,
@@ -23,6 +23,11 @@ const copy = async () => {
     console.error(e)
     showMessage('复制失败', 'error')
   }
+}
+
+const edit = (_) => {
+  console.log('editPrompt...')
+  emit('edit-prompt', _, { ...props.prompt })
 }
 
 const usePrompt = async () => {
@@ -54,15 +59,18 @@ const usePrompt = async () => {
     <el-descriptions :column="1" size="small" border direction="vertical">
       <template #extra>
         <div class="flex w-full items-center justify-between">
-          <span class="text-sm whitespace-nowrap overflow-x-auto w-48"> {{ prompt.act }} </span>
+          <span class="text-sm whitespace-nowrap overflow-x-auto w-44"> {{ prompt.act }} </span>
           <span class="drag-prompt"></span>
-          <div>
-            <el-button size="small" @click="copy">复制</el-button>
+          <div class="flex">
+            <el-button size="small" @click="edit" v-show="prompt.type === 'user'">编辑</el-button>
+            <el-button size="small" @click="copy" v-show="!(prompt.type === 'user')"
+              >复制</el-button
+            >
             <el-button size="small" type="success" @click="usePrompt">使用</el-button>
           </div>
         </div>
       </template>
-      <el-descriptions-item label="prompt" label-align="center" align="center">
+      <el-descriptions-item label="prompt" label-align="center" align="left" width="700px">
         {{ prompt.prompt }}
       </el-descriptions-item>
     </el-descriptions>

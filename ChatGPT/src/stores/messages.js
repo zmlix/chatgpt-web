@@ -25,7 +25,7 @@ export const useMessagesStore = defineStore('messages', () => {
 
   function setIsSending(val) {
     sending.isSending = val
-    if (!val && ChatGPTApiSource) {
+    if (!val && ChatGPTApiSource.value) {
       ChatGPTApiSource.value.cancel('stoped Api')
     }
   }

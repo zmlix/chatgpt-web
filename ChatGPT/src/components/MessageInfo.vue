@@ -105,7 +105,7 @@ const { toClipboard } = useClipboard()
 watch(
   () => sending.isSending || showMsgRef.value,
   (isShowMsg) => {
-    if (isShowMsg) {
+    if (isShowMsg && showMsgRef) {
       const hljs_blocks = showMsgRef.value.getElementsByClassName('hljs')
       if (hljs_blocks.length) {
         for (let i = 0; i < hljs_blocks.length; i++) {
@@ -117,7 +117,6 @@ watch(
           buttonElem.addEventListener('click', async () => {
             try {
               await toClipboard(hljs_blocks[i])
-              console.log(hljs_blocks[i].children)
               showMessage('复制成功', 'success')
             } catch (e) {
               console.error(e)

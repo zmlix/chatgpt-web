@@ -18,9 +18,40 @@ export const useSysStore = defineStore(
     const API_KEY = computed(() => setting.value.api_key)
     const API_URL = computed(() => setting.value.api_url)
 
+    function sortPromptList() {
+      promptList.value.sort(function (a, b) {
+        if (a.type === 'user' && b.type !== 'user') {
+          return -1
+        } else if (a.type !== 'user' && b.type === 'user') {
+          return 1
+        } else {
+          return 0
+        }
+      })
+    }
+
     function setPromptList(webPromptList) {
       promptList.value = promptList.value.filter((item) => item.type === 'user')
       promptList.value = promptList.value.concat(webPromptList)
+      sortPromptList()
+    }
+
+    function addPrompt(prompt) {
+      const idx = promptList.value.findIndex((item) => item.id && item.id === prompt.id)
+      if (idx !== -1) {
+        promptList.value[idx] = prompt
+      } else {
+        promptList.value.push(prompt)
+      }
+      sortPromptList()
+    }
+
+    function delPrompt(prompt) {
+      const idx = promptList.value.findIndex((item) => item.id && item.id === prompt.id)
+      if (idx !== -1) {
+        promptList.value.splice(idx, 1)
+      }
+      sortPromptList()
     }
 
     function set(key, url) {
@@ -38,7 +69,9 @@ export const useSysStore = defineStore(
       stream,
       creditGrants,
       promptList,
-      setPromptList
+      setPromptList,
+      addPrompt,
+      delPrompt
     }
   },
   {
