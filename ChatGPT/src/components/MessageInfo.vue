@@ -92,12 +92,18 @@ const editMsg = () => {
   if (checkIsSending()) return
   new_msg.value = props.message.msg
   isEdit.value = !isEdit.value
+  if (isEdit.value) {
+    isCollapse.value = true
+  } else {
+    isCollapse.value = false
+  }
 }
 
 const editMsgEnter = () => {
   console.log('editMsgEnter...')
   messagesStore.set(props.message.id, { msg: new_msg.value, time: new Date() })
   isEdit.value = false
+  isCollapse.value = false
 }
 
 const showMsgRef = ref(null)
@@ -144,7 +150,7 @@ watch(
 <template>
   <div class="w-full">
     <div class="flex items-start">
-      <div class="mx-1 hidden sm:flex">
+      <div class="mx-1 hidden md:flex">
         <el-avatar
           v-if="message.typ == 'user'"
           :icon="UserFilled"
@@ -158,8 +164,8 @@ watch(
         />
       </div>
       <div class="flex flex-col justify-center w-full message-body">
-        <div class="flex flex-col sm:flex-row sm:justify-between justify-start sm:items-center">
-          <div class="flex items-center gap-2 mx-1 sm:hidden">
+        <div class="flex justify-between items-end">
+          <div class="flex items-center gap-2 mx-1 md:hidden">
             <el-avatar
               v-if="message.typ == 'user'"
               :icon="UserFilled"
@@ -171,50 +177,50 @@ watch(
               :size="28"
               style="background: transparent; width: 48px"
             />
-            <div class="flex w-96">{{ getCurrentTime(message.time) }}</div>
-            <div class="w-full hover:cursor-move h-6 drag-msg"></div>
+            <div class="flex w-full">{{ getCurrentTime(message.time) }}</div>
           </div>
-          <div class="w-full hidden sm:flex">
-            <div class="w-full">{{ getCurrentTime(message.time) }}</div>
-            <div class="w-full hover:cursor-move h-6 drag-msg"></div>
-          </div>
-
-          <div class="flex justify-end sm:justify-start">
-            <el-switch
-              v-if="message.status != 'error'"
-              class="flex mt-3 p-1"
-              v-model="isMarkdown"
-              size="small"
-              inline-prompt
-              active-text="渲染"
-              inactive-text="渲染"
-              style="height: 5px"
-            />
-            <el-switch
-              class="flex mt-3 p-1"
-              v-model="isSkiped"
-              size="small"
-              inline-prompt
-              active-text="跳过"
-              inactive-text="跳过"
-              style="height: 5px"
-              @change="skipMsg"
-            />
-            <div class="p-1">
-              <el-link
-                :underline="false"
-                :icon="isCollapse ? Expand : Fold"
-                @click="isCollapse = !isCollapse"
+          <div class="w-full hidden md:flex">{{ getCurrentTime(message.time) }}</div>
+          <div class="w-full hover:cursor-move h-6 drag-msg"></div>
+          <div class="flex flex-col-reverse items-center sm:flex-row sm:items-start">
+            <div class="flex">
+              <el-switch
+                v-if="message.status != 'error'"
+                class="flex sm:mt-3 my-1 p-1"
+                v-model="isMarkdown"
+                size="small"
+                inline-prompt
+                active-text="渲染"
+                inactive-text="渲染"
+                style="height: 5px"
+              />
+              <el-switch
+                class="flex sm:mt-3 my-1 p-1"
+                v-model="isSkiped"
+                size="small"
+                inline-prompt
+                active-text="跳过"
+                inactive-text="跳过"
+                style="height: 5px"
+                @change="skipMsg"
               />
             </div>
-            <div class="p-1">
-              <el-link :underline="false" :icon="Edit" @click="editMsg" />
-            </div>
-            <div class="p-1">
-              <el-link :underline="false" :icon="Refresh" @click="reSendMsg" />
-            </div>
-            <div class="p-1">
-              <el-link :underline="false" :icon="CloseBold" @click="delMsg" />
+            <div class="flex">
+              <div class="p-1">
+                <el-link
+                  :underline="false"
+                  :icon="isCollapse ? Expand : Fold"
+                  @click="isCollapse = !isCollapse"
+                />
+              </div>
+              <div class="p-1">
+                <el-link :underline="false" :icon="Edit" @click="editMsg" />
+              </div>
+              <div class="p-1">
+                <el-link :underline="false" :icon="Refresh" @click="reSendMsg" />
+              </div>
+              <div class="p-1">
+                <el-link :underline="false" :icon="CloseBold" @click="delMsg" />
+              </div>
             </div>
           </div>
         </div>
