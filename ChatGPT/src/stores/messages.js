@@ -83,6 +83,7 @@ export const useMessagesStore = defineStore('messages', () => {
   async function getMessage(body, params) {
     setIsSending(true)
     body.stream = sysStore.stream
+    body.temperature = sysStore.temperature
 
     if (body.stream) {
       const streamId = pushMessage('', { typ: 'chatgpt', status: 'success' }, params)

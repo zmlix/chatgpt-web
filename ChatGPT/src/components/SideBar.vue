@@ -52,11 +52,11 @@ const getCreditGrants = async () => {
   }
 }
 
-const size = ref(document.body.clientWidth <= 640 ? '100%' : '350px')
+const size = ref(document.body.clientWidth <= 640 ? document.body.clientWidth - 56 : 350)
 onMounted(() => {
   window.onresize = () => {
     return (() => {
-      size.value = document.body.clientWidth <= 640 ? '100%' : '350px'
+      size.value = document.body.clientWidth <= 640 ? document.body.clientWidth - 56 : 350
     })()
   }
 })
@@ -64,7 +64,14 @@ onMounted(() => {
 
 <template>
   <div>
-    <el-drawer v-model="sysStore.openSideBar" direction="ltr" :with-header="false" :size="size">
+    <el-drawer
+      v-model="sysStore.openSideBar"
+      direction="ltr"
+      :with-header="false"
+      :size="size"
+      class="mx-7 my-6 rounded-3xl"
+      style="height: auto"
+    >
       <div class="flex flex-col h-full">
         <div
           class="flex items-center justify-between h-8 mb-2 pb-2 pl-2 border-b border-dashed border-b-gray-400"
@@ -96,7 +103,7 @@ onMounted(() => {
           </draggable>
         </el-scrollbar>
         <div class="flex gap-1 relative top-3">
-          <SettingDialog></SettingDialog>
+          <SettingDialog :size="size"></SettingDialog>
           <PromptStore :size="size"></PromptStore>
         </div>
       </div>

@@ -150,7 +150,12 @@ watch(
           :icon="UserFilled"
           style="background: transparent; font-size: 24px"
         />
-        <el-avatar v-else :src="chatgpt" style="background: transparent" />
+        <el-avatar
+          v-else
+          :src="chatgpt"
+          :size="28"
+          style="background: transparent; width: 40px; margin-top: 5px"
+        />
       </div>
       <div class="flex flex-col justify-center w-full message-body">
         <div class="flex justify-between items-end">
@@ -255,7 +260,7 @@ watch(
 .message-body {
   padding: 1px 10px;
   margin: 3px 0;
-  background: linear-gradient(to right bottom, #ece9e6, #ffffff);
+  background: #ffffff;
   border-radius: 5px;
   font-size: 14px;
   max-width: 100%;

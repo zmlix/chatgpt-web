@@ -11,7 +11,7 @@ import axios from 'axios'
 
 defineProps({
   size: {
-    type: String,
+    type: Number,
     required: true
   }
 })
@@ -121,7 +121,8 @@ const delPrompt = () => {
       :with-header="false"
       :size="size"
       @closed="() => (isOpen = false)"
-      class="flex"
+      class="flex mx-7 my-6 rounded-3xl"
+      style="height: auto"
     >
       <div class="flex m-1">
         <div class="flex gap-2 w-full" v-show="!isAddPrompt">
