@@ -144,7 +144,7 @@ watch(
 <template>
   <div class="w-full">
     <div class="flex items-start">
-      <div class="mx-1 hidden md:flex">
+      <div class="mx-1 hidden sm:flex">
         <el-avatar
           v-if="message.typ == 'user'"
           :icon="UserFilled"
@@ -158,8 +158,8 @@ watch(
         />
       </div>
       <div class="flex flex-col justify-center w-full message-body">
-        <div class="flex justify-between items-end">
-          <div class="flex items-center gap-2 mx-1 md:hidden">
+        <div class="flex flex-col sm:flex-row sm:justify-between justify-start sm:items-center">
+          <div class="flex items-center gap-2 mx-1 sm:hidden">
             <el-avatar
               v-if="message.typ == 'user'"
               :icon="UserFilled"
@@ -171,11 +171,15 @@ watch(
               :size="28"
               style="background: transparent; width: 48px"
             />
-            <div class="flex w-full">{{ getCurrentTime(message.time) }}</div>
+            <div class="flex w-96">{{ getCurrentTime(message.time) }}</div>
+            <div class="w-full hover:cursor-move h-6 drag-msg"></div>
           </div>
-          <div class="w-full hidden md:flex">{{ getCurrentTime(message.time) }}</div>
-          <div class="w-full hover:cursor-move h-6 drag-msg"></div>
-          <div class="flex">
+          <div class="w-full hidden sm:flex">
+            <div class="w-full">{{ getCurrentTime(message.time) }}</div>
+            <div class="w-full hover:cursor-move h-6 drag-msg"></div>
+          </div>
+
+          <div class="flex justify-end sm:justify-start">
             <el-switch
               v-if="message.status != 'error'"
               class="flex mt-3 p-1"
