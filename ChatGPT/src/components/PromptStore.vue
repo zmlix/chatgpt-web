@@ -45,6 +45,13 @@ const getPrompts = async (cancelToken) => {
   }
 }
 
+const refresh = () => {
+  setTimeout(() => {
+    source.value = cancelToken.source()
+    getPrompts(source.value.token)
+  }, 500)
+}
+
 watch(isOpen, (val) => {
   console.log(sysStore.promptList.length)
   if (!sysStore.promptList.length) {
@@ -121,7 +128,7 @@ const delPrompt = () => {
       :with-header="false"
       :size="size"
       @closed="() => (isOpen = false)"
-      class="flex mx-7 my-6 rounded-3xl"
+      class="flex mx-2 sm:mx-7 my-4 sm:my-6 rounded-3xl"
       style="height: auto"
     >
       <div class="flex m-1">
@@ -176,10 +183,9 @@ const delPrompt = () => {
         </el-form>
       </div>
       <template #footer>
-        <div>
-          <el-button @click="() => (isOpen = false)" style="width: 100%" v-show="!isAddPrompt"
-            >返回</el-button
-          >
+        <div class="flex" v-show="!isAddPrompt">
+          <el-button @click="refresh">刷新</el-button>
+          <el-button @click="() => (isOpen = false)" style="width: 100%">返回</el-button>
         </div>
         <div>
           <el-button

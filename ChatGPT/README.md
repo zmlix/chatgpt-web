@@ -106,7 +106,8 @@ docker pull loewe24/chatgpt-web:latest
 
 ![公式代码渲染](./imgs/a.png)
 ![图像渲染](./imgs/b.png)
-![修改折叠跳过](./imgs/c.png)
-![修改结果](./imgs/d.png)
-![会话面板](./imgs/e.png)
-![移动设备](./imgs/f.png)
+![会话面板](./imgs/c.png)
+![Prompt商城](./imgs/d.png)
+![配置界面](./imgs/e.png)
+![移动设备页面](./imgs/f.png)
+![移动设备页面2](./imgs/g.png)

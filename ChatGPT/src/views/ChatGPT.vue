@@ -6,7 +6,7 @@ import StopRequest from '../components/StopRequest.vue'
 import { useMessagesStore } from '../stores/messages'
 import { useSysStore } from '../stores/sys'
 import { showMessage } from '../utils/utils'
-import { Setting } from '@element-plus/icons-vue'
+import { House } from '@element-plus/icons-vue'
 const messagesStore = useMessagesStore()
 const sysStore = useSysStore()
 const messages = messagesStore.initMessages()
@@ -69,7 +69,7 @@ const openSideBarHandle = () => {
 </script>
 
 <template>
-  <div class="chat flex flex-col h-full px-7 py-6">
+  <div class="chat flex flex-col h-full px-2 sm:px-7 py-4 sm:py-6">
     <div class="flex flex-col h-full border-0 rounded-3xl shadow-2xl shadow-indigo-900">
       <p class="chat-title m-auto text-6xl font-semibold py-1 bg-clip-text text-transparent">
         ChatGPT
@@ -78,7 +78,7 @@ const openSideBarHandle = () => {
       <StopRequest></StopRequest>
       <div class="flex m-5">
         <div class="flex items-center mr-4">
-          <el-button class="" @click="openSideBarHandle" circle :icon="Setting"></el-button>
+          <el-button color="#f1f5f9" @click="openSideBarHandle" circle :icon="House"></el-button>
         </div>
         <div class="flex gap-3 w-full">
           <el-input
@@ -92,7 +92,7 @@ const openSideBarHandle = () => {
             resize="none"
             @keydown="sendByKey"
           />
-          <el-button color="#626aef" class="w-24" style="height: 100%" @click="send" round
+          <el-button color="#626aef" class="w-14 sm:w-24" style="height: 100%" @click="send" round
             >发送</el-button
           >
         </div>

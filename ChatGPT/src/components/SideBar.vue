@@ -52,11 +52,11 @@ const getCreditGrants = async () => {
   }
 }
 
-const size = ref(document.body.clientWidth <= 640 ? document.body.clientWidth - 56 : 350)
+const size = ref(document.body.clientWidth <= 640 ? document.body.clientWidth - 16 : 350)
 onMounted(() => {
   window.onresize = () => {
     return (() => {
-      size.value = document.body.clientWidth <= 640 ? document.body.clientWidth - 56 : 350
+      size.value = document.body.clientWidth <= 640 ? document.body.clientWidth - 16 : 350
     })()
   }
 })
@@ -69,7 +69,7 @@ onMounted(() => {
       direction="ltr"
       :with-header="false"
       :size="size"
-      class="mx-7 my-6 rounded-3xl"
+      class="mx-2 sm:mx-7 my-4 sm:my-6 rounded-3xl"
       style="height: auto"
     >
       <div class="flex flex-col h-full">

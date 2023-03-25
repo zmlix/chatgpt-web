@@ -49,7 +49,7 @@ const enter = () => {
       direction="ltr"
       :with-header="false"
       :size="size"
-      class="flex mx-7 my-6 rounded-3xl"
+      class="flex mx-2 sm:mx-7 my-4 sm:my-6 rounded-3xl"
       style="height: auto"
     >
       <div>
