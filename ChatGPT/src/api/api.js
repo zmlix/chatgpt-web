@@ -70,8 +70,12 @@ export const post_GetMessage = (
 }
 
 const CreditGrantsApi = axios.create(axiosConfig)
-export const get_GetCreditGrants = (api_key) => {
-  return CreditGrantsApi.get('https://api.openai.com/dashboard/billing/credit_grants', {
+export const get_GetCreditGrants = (api_url, api_key) => {
+  let url= api_url
+  if(api_url.indexOf("api.openai.com") >= 0){
+    url = 'https://api.openai.com/dashboard/billing/credit_grants'
+  }
+  return CreditGrantsApi.get(url, {
     headers: {
       Authorization: 'Bearer ' + api_key
     }

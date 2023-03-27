@@ -42,8 +42,8 @@ const getCreditGrants = async () => {
   sysStore.creditGrants = '获取中...'
   isGetCreditGrants.value = true
   try {
-    const response = await get_GetCreditGrants(sysStore.API_KEY)
-    sysStore.creditGrants = response.data.total_available + ' USD'
+    const response = await get_GetCreditGrants(sysStore.API_URL, sysStore.API_KEY)
+    sysStore.creditGrants = response.data.total_available.toFixed(8) + ' USD'
   } catch (error) {
     sysStore.creditGrants = '获取失败'
     console.log(error)
