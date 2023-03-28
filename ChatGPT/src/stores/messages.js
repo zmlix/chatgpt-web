@@ -94,7 +94,18 @@ export const useMessagesStore = defineStore('messages', () => {
           sse.close()
           return
         }
-        var payload = JSON.parse(e.data)
+        var payload
+        try {
+          payload = JSON.parse(e.data)
+        } catch (error) {
+          let index = e.data.indexOf('data:')
+          if (index >= 0) {
+            e.data = e.data.substring(index + 5)
+            payload = JSON.parse(e.data)
+          } else {
+            return
+          }
+        }
         if ('content' in payload['choices'][0]['delta']) {
           update(streamId, payload['choices'][0]['delta']['content'])
         }
