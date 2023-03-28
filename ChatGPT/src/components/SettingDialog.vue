@@ -63,7 +63,7 @@ const enter = () => {
         </el-form>
         <el-divider />
         <div class="flex items-center justify-between">
-          <label class="el-form-item__label">开启打字机效果(stream模式)</label>
+          <label class="el-form-item__label">打字机效果(会增加token消耗)</label>
           <el-switch v-model="setting.stream" />
         </div>
         <el-divider />
