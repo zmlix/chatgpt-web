@@ -118,8 +118,18 @@ export const useMessagesStore = defineStore('messages', () => {
       sse.addEventListener('error', (e) => {
         console.log('error ', e)
         sse.close()
+        let error_msg
+        try {
+          error_msg = JSON.parse(e.data)
+        } catch (error) {
+          error_msg = { details: '未知错误,请先检查代理是否正确' }
+        }
         set(streamId, {
-          msg: '<font color="red">Error: 请求出错</font>',
+          msg:
+            '<font color="red">Error: 请求出错</font>\n' +
+            '```json\n' +
+            JSON.stringify(error_msg, null, 4) +
+            '\n```',
           typ: 'sys',
           status: 'error'
         })
@@ -144,8 +154,17 @@ export const useMessagesStore = defineStore('messages', () => {
             params
           )
         } else {
+          let error_msg
+          try {
+            error_msg = error.response.data
+          } catch (error) {
+            error_msg = { details: '未知错误,请先检查代理是否正确' }
+          }
           pushMessage(
-            '<font color="red">Error: 请求出错</font>',
+            '<font color="red">Error: 请求出错</font>\n' +
+              '```json\n' +
+              JSON.stringify(error_msg, null, 4) +
+              '\n```',
             { typ: 'sys', status: 'error' },
             params
           )
