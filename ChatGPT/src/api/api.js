@@ -6,7 +6,7 @@ const DEFAULT_TIMEOUT = 60 * 1000
 const chatRequest = (data) => {
   const req = {
     model: 'gpt-3.5-turbo',
-    messages: [{ role: data.role || 'user', content: data.content }],
+    messages: data.messages || [],
     temperature: data.temperature || 1,
     top_p: data.top_p || 1,
     n: data.n || 1,

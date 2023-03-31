@@ -88,7 +88,25 @@ export const useChatStore = defineStore(
   },
   {
     persist: {
-      paths: ['chats', 'currentChatIdx']
+      paths: ['chats', 'currentChatIdx'],
+      afterRestore: (ctx) => {
+        console.log(`恢复 '${ctx.store.$id}'`)
+        ctx.store.chats = ctx.store.chats.map((chat) => {
+          chat.messages = chat.messages.map((message) => {
+            if (message.typ === 'user') {
+              message.role = 'user'
+            } else if (message.typ === 'chatgpt') {
+              message.role = 'assistant'
+            } else if (message.typ === 'system') {
+              message.role = 'system'
+            } else {
+              message.role = null
+            }
+            return message
+          })
+          return chat
+        })
+      }
     }
   }
 )

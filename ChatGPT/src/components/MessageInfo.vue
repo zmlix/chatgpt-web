@@ -80,7 +80,7 @@ const reSendMsg = () => {
   messagesStore.setSendingId(msg_id)
   messagesStore.set(msg_id, { typ: 'user' })
   messagesStore.getMessage(
-    { role: 'user', content: messagesStore.getHistoryMsg('part', { id: msg_id }) },
+    { messages: messagesStore.getHistoryMsg('part', { id: msg_id }) },
     { insert: { id: msg_id } }
   )
 }
@@ -182,9 +182,8 @@ watch(
           <div class="w-full hidden md:flex">{{ getCurrentTime(message.time) }}</div>
           <div class="w-full hover:cursor-move h-6 drag-msg"></div>
           <div class="flex flex-col-reverse items-center sm:flex-row sm:items-start">
-            <div class="flex">
+            <div class="flex" v-if="message.status != 'error'">
               <el-switch
-                v-if="message.status != 'error'"
                 class="flex sm:mt-3 my-1 p-1"
                 v-model="isMarkdown"
                 size="small"
@@ -212,7 +211,7 @@ watch(
                   @click="isCollapse = !isCollapse"
                 />
               </div>
-              <div class="p-1">
+              <div class="p-1" v-if="message.status != 'error'">
                 <el-link :underline="false" :icon="Edit" @click="editMsg" />
               </div>
               <div class="p-1">
@@ -235,9 +234,6 @@ watch(
               v-model="new_msg"
               :autosize="{ minRows: 1, maxRows: 10 }"
               type="textarea"
-              maxlength="3000"
-              clearable
-              show-word-limit
               resize="none"
               @keyup.shift.enter="editMsgEnter"
             />

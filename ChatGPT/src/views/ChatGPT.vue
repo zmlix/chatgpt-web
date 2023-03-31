@@ -29,10 +29,7 @@ const messages = messagesStore.initMessages()
 const input = ref('')
 const sending = messagesStore.sending
 
-const body = reactive({
-  role: 'user',
-  content: ''
-})
+const body = reactive({})
 
 const sendByKey = (event) => {
   const { shiftKey, keyCode } = event
@@ -55,11 +52,12 @@ const send = () => {
   }
   messagesStore.push({
     typ: 'user',
+    role: 'user',
     msg: input.value,
     status: 'success'
   })
   input.value = ''
-  body.content = messagesStore.getHistoryMsg('all')
+  body.messages = messagesStore.getHistoryMsg('all')
   messagesStore.getMessage(body)
 }
 
@@ -86,9 +84,6 @@ const openSideBarHandle = () => {
             :autosize="{ minRows: 1, maxRows: 4 }"
             type="textarea"
             placeholder="请输入 (使用Shift+Enter换行)"
-            maxlength="3000"
-            clearable
-            show-word-limit
             resize="none"
             @keydown="sendByKey"
           />

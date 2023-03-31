@@ -55,10 +55,14 @@ const enter = () => {
       <div>
         <el-form label-position="top" label-width="100px" :model="setting">
           <el-form-item label="API URL">
-            <el-input v-model="setting.api_url" placeholder="默认使用官方API" />
+            <el-input v-model="setting.api_url" placeholder="默认使用官方API" clearable />
           </el-form-item>
           <el-form-item label="OPENAI_API_KEY">
-            <el-input v-model="setting.api_key" placeholder="官方API必须设置此项才能使用" />
+            <el-input
+              v-model="setting.api_key"
+              placeholder="官方API必须设置此项才能使用"
+              clearable
+            />
           </el-form-item>
         </el-form>
         <el-divider />

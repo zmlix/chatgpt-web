@@ -41,11 +41,11 @@ const usePrompt = async () => {
     messagesStore.newMessages()
     const msg_id = messagesStore.pushMessage(props.prompt.prompt, {
       typ: 'user',
+      role: 'system',
       status: 'success'
     })
     await messagesStore.getMessage({
-      role: 'user',
-      content: messagesStore.getHistoryMsg('part', { id: msg_id })
+      messages: messagesStore.getHistoryMsg('part', { id: msg_id })
     })
   } catch (error) {
     showMessage('失败', 'error')

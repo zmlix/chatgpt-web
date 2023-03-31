@@ -86,7 +86,7 @@ export const useMessagesStore = defineStore('messages', () => {
     body.temperature = sysStore.temperature
 
     if (body.stream) {
-      const streamId = pushMessage('', { typ: 'chatgpt', status: 'success' }, params)
+      const streamId = pushMessage('', { role: 'assistant', status: 'success' }, params)
       const sse = post_GetMessage(body, sysStore.API_KEY, sysStore.API_URL)
       sse.addEventListener('message', (e) => {
         if (e.data == '[DONE]' || !sending.isSending) {
@@ -124,15 +124,15 @@ export const useMessagesStore = defineStore('messages', () => {
         } catch (error) {
           error_msg = { details: '未知错误,请先检查代理是否正确' }
         }
-        set(streamId, {
-          msg:
-            '<font color="red">Error: 请求出错</font>\n' +
+        del(streamId)
+        pushMessage(
+          '<font color="red">Error: 请求出错</font>\n' +
             '```json\n' +
             JSON.stringify(error_msg, null, 4) +
             '\n```',
-          typ: 'sys',
-          status: 'error'
-        })
+          { typ: 'sys', status: 'error', role: null, skip: true },
+          params
+        )
       })
       sse.stream()
     } else {
@@ -145,7 +145,7 @@ export const useMessagesStore = defineStore('messages', () => {
           ChatGPTApiSource.value.token
         )
         const message = response.data.choices[0].message.content
-        pushMessage(message, { typ: 'chatgpt', status: 'success' }, params)
+        pushMessage(message, { role: 'assistant', status: 'success' }, params)
       } catch (error) {
         if (axios.isCancel(error)) {
           pushMessage(
@@ -234,10 +234,19 @@ export const useMessagesStore = defineStore('messages', () => {
       filteredMessages = messages.value.slice(0, idIndex + 1)
     }
     filteredMessages = filteredMessages.filter((message) => !message.skip)
-    let content = filteredMessages.map((message) => message.msg).join('\n')
-    content = content.slice(-4096)
-    console.log(typ, content.length, content)
-    return content
+    filteredMessages = filteredMessages.filter((message) => message.role)
+    const _messages = filteredMessages.reduceRight(
+      (acc, curr) => {
+        if (acc.total + curr.msg.length <= 2000) {
+          acc.total += curr.msg.length
+          acc.messages.unshift({ role: curr.role, content: curr.msg })
+        }
+        return acc
+      },
+      { total: 0, messages: [] }
+    ).messages
+    console.log(typ, _messages.length, _messages)
+    return _messages
   }
 
   return {
