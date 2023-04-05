@@ -1,6 +1,8 @@
 <script setup>
 import { Refresh, UserFilled } from '@element-plus/icons-vue'
 import { ref, computed, watch } from 'vue'
+import xss from 'xss'
+import 'github-markdown-css'
 import markdown from 'markdown-it'
 import hljs from 'markdown-it-highlightjs'
 import katex from 'markdown-it-katex'
@@ -21,6 +23,19 @@ const props = defineProps({
   }
 })
 
+const whiteList = (() => {
+  let wl = xss.getDefaultWhiteList()
+  for (var key in wl) {
+    wl[key].push('class', 'style')
+  }
+  return wl
+})()
+
+console.log(whiteList)
+const XSS = new xss.FilterXSS({
+  whiteList: whiteList
+})
+
 const md = markdown({
   html: true,
   linkify: true,
@@ -32,7 +47,7 @@ const md = markdown({
   .use(md_tb)
 
 const markdown_msg = computed(() => {
-  return '<div>' + md.render(props.message.msg || '') + '</div>'
+  return XSS.process(md.render(props.message.msg || ''))
 })
 
 const raw_msg = computed(() => {
@@ -112,35 +127,40 @@ watch(
   () => sending.isSending || showMsgRef.value,
   (isShowMsg) => {
     if (isShowMsg && showMsgRef) {
-      const hljs_blocks = showMsgRef.value.getElementsByClassName('hljs')
-      if (hljs_blocks.length) {
-        for (let i = 0; i < hljs_blocks.length; i++) {
-          const copyCodeDiv = document.createElement('div')
-          copyCodeDiv.classList.add('copy-code')
-          const buttonElem = document.createElement('button')
-          buttonElem.classList.add('el-button', 'el-button--small')
-          buttonElem.innerHTML = '<span>复制代码</span>'
-          buttonElem.addEventListener('click', async () => {
-            try {
-              await toClipboard(hljs_blocks[i])
-              showMessage('复制成功', 'success')
-            } catch (e) {
-              console.error(e)
-              showMessage('复制失败', 'error')
-            }
-          })
-          buttonElem.addEventListener('mouseover', () => {
-            copyCodeDiv.style.display = 'flex'
-          })
-          copyCodeDiv.appendChild(buttonElem)
-          hljs_blocks[i].insertAdjacentElement('beforeBegin', copyCodeDiv)
-          hljs_blocks[i].addEventListener('mouseover', () => {
-            copyCodeDiv.style.display = 'flex'
-          })
-          hljs_blocks[i].addEventListener('mouseout', () => {
-            copyCodeDiv.style.display = 'none'
-          })
+      try {
+        const hljs_blocks = showMsgRef.value.getElementsByClassName('hljs')
+        if (hljs_blocks.length) {
+          for (let i = 0; i < hljs_blocks.length; i++) {
+            const pre = hljs_blocks[i].parentElement
+            const copyCodeDiv = document.createElement('div')
+            copyCodeDiv.classList.add('copy-code')
+            const buttonElem = document.createElement('button')
+            buttonElem.classList.add('el-button', 'el-button--small')
+            buttonElem.innerHTML = '<span>复制代码</span>'
+            buttonElem.addEventListener('click', async () => {
+              try {
+                await toClipboard(hljs_blocks[i])
+                showMessage('复制成功', 'success')
+              } catch (e) {
+                console.error(e)
+                showMessage('复制失败', 'error')
+              }
+            })
+            buttonElem.addEventListener('mouseover', () => {
+              copyCodeDiv.style.display = 'flex'
+            })
+            copyCodeDiv.appendChild(buttonElem)
+            hljs_blocks[i].insertAdjacentElement('beforeBegin', copyCodeDiv)
+            pre.addEventListener('mouseover', () => {
+              copyCodeDiv.style.display = 'flex'
+            })
+            pre.addEventListener('mouseout', () => {
+              copyCodeDiv.style.display = 'none'
+            })
+          }
         }
+      } catch (error) {
+        console.log(error)
       }
     }
   }
@@ -226,7 +246,7 @@ watch(
         <el-divider style="margin: 5px"></el-divider>
         <div class="mt-2 mb-1 overflow-x-auto" v-show="!isCollapse">
           <div v-if="!isMarkdown" class="whitespace-pre-wrap">{{ raw_msg }}</div>
-          <div v-else v-html="markdown_msg" ref="showMsgRef"></div>
+          <div v-else v-html="markdown_msg" ref="showMsgRef" class="markdown-body"></div>
         </div>
         <el-row :gutter="10" v-show="isEdit" class="mb-2">
           <el-col :span="21">
@@ -277,8 +297,6 @@ watch(
   display: flex;
   justify-content: flex-end;
   position: relative;
-  top: 12px;
-  right: 5px;
   height: 0px;
 }
 </style>
