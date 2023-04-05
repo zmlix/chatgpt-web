@@ -25,14 +25,38 @@ const props = defineProps({
 
 const whiteList = (() => {
   let wl = xss.getDefaultWhiteList()
+  let mathML = [
+    'math',
+    'mi',
+    'mn',
+    'mo',
+    'ms',
+    'msup',
+    'msub',
+    'mfrac',
+    'mroot',
+    'msqrt',
+    'mtable',
+    'mtr',
+    'mtd',
+    'mrow',
+    'mmultiscripts',
+    'semantics',
+    'annotation'
+  ]
+  for (var i = 0; i < mathML.length; i++) {
+    wl[mathML[i]] = []
+  }
   for (var key in wl) {
     wl[key].push('class', 'style')
   }
+  wl.annotation.push('encoding')
   return wl
 })()
 
 const XSS = new xss.FilterXSS({
-  whiteList: whiteList
+  whiteList: whiteList,
+  css: false
 })
 
 const md = markdown({
