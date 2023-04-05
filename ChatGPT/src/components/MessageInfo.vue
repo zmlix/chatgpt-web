@@ -24,7 +24,7 @@ const props = defineProps({
 const md = markdown({
   html: true,
   linkify: true,
-  typographer: true,
+  typographer: false,
   breaks: true
 })
   .use(katex)

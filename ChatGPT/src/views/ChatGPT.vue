@@ -50,7 +50,7 @@ const send = () => {
     showMessage('请等待回答完毕', 'error')
     return
   }
-  messagesStore.push({
+  const Q_id = messagesStore.push({
     typ: 'user',
     role: 'user',
     msg: input.value,
@@ -59,6 +59,7 @@ const send = () => {
   input.value = ''
   body.messages = messagesStore.getHistoryMsg('all')
   messagesStore.getMessage(body)
+  messagesStore.set(Q_id, { skip: sysStore.skipHistoryMessages })
 }
 
 const openSideBarHandle = () => {

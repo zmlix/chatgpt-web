@@ -17,7 +17,8 @@ const setting = ref({
   api_url: '',
   api_key: '',
   stream: true,
-  temperature: 1
+  temperature: 1,
+  skipHistoryMessages: false
 })
 
 const openSettingDialogHandle = () => {
@@ -26,6 +27,7 @@ const openSettingDialogHandle = () => {
   setting.value.api_url = sysStore.API_URL
   setting.value.stream = sysStore.stream
   setting.value.temperature = sysStore.temperature
+  setting.value.skipHistoryMessages = sysStore.skipHistoryMessages
 }
 
 const enter = () => {
@@ -35,6 +37,7 @@ const enter = () => {
   sysStore.set(setting.value.api_key, setting.value.api_url)
   sysStore.stream = setting.value.stream
   sysStore.temperature = setting.value.temperature
+  sysStore.skipHistoryMessages = setting.value.skipHistoryMessages
   sysStore.openSettingDialog = false
 }
 </script>
@@ -74,6 +77,17 @@ const enter = () => {
         <div class="flex flex-col items-start">
           <label class="el-form-item__label">温度(较高的值将使输出更加随机)</label>
           <el-slider v-model="setting.temperature" :max="2" :step="0.1" />
+        </div>
+        <el-divider />
+        <div class="flex items-center justify-between">
+          <el-tooltip
+            effect="dark"
+            content="开启后会自动打开跳过开关,适合问答模式,减少token消耗"
+            placement="top-start"
+          >
+            <label class="el-form-item__label">自动跳过</label>
+          </el-tooltip>
+          <el-switch v-model="setting.skipHistoryMessages" />
         </div>
       </div>
       <template #footer>

@@ -14,6 +14,7 @@ export const useSysStore = defineStore(
     })
     const stream = ref(true)
     const temperature = ref(1)
+    const skipHistoryMessages = ref(false)
     const promptList = ref([])
 
     const API_KEY = computed(() => setting.value.api_key)
@@ -69,6 +70,7 @@ export const useSysStore = defineStore(
       API_URL,
       stream,
       temperature,
+      skipHistoryMessages,
       creditGrants,
       promptList,
       setPromptList,
@@ -78,7 +80,14 @@ export const useSysStore = defineStore(
   },
   {
     persist: {
-      paths: ['setting', 'stream', 'temperature', 'creditGrants', 'promptList']
+      paths: [
+        'setting',
+        'stream',
+        'temperature',
+        'skipHistoryMessages',
+        'creditGrants',
+        'promptList'
+      ]
     }
   }
 )
