@@ -18,6 +18,12 @@ export const useChatStore = defineStore(
       return chats.value.at(index)
     }
 
+    function getNextChat(step) {
+      const idx = chats.value.findIndex((c) => c.idx === currentChatIdx.value)
+      const next_idx = (idx + step) % chats.value.length
+      return getChatByIndex(next_idx)
+    }
+
     function getChatByIdx(idx) {
       const index = chats.value.findIndex((chat) => chat.idx === idx)
       if (index !== -1) {
@@ -77,6 +83,7 @@ export const useChatStore = defineStore(
       chats,
       getCurrentChat,
       getChatByIndex,
+      getNextChat,
       getChatByIdx,
       addNewChat,
       delChatByIdx,

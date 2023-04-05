@@ -71,6 +71,12 @@ export const useMessagesStore = defineStore('messages', () => {
     setMessages(chatStore.getChatByIdx(idx))
   }
 
+  function getNextMessages(step) {
+    const idx = chatStore.getNextChat(step).idx
+    console.log(idx)
+    getMessages(idx)
+  }
+
   function delMessages(idx) {
     chatStore.delChatByIdx(idx)
     if (chatStore.length === 0) {
@@ -263,6 +269,7 @@ export const useMessagesStore = defineStore('messages', () => {
     initMessages,
     newMessages,
     getMessages,
+    getNextMessages,
     delMessages,
     getMessage,
     push,

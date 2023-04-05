@@ -6,7 +6,7 @@ import StopRequest from '../components/StopRequest.vue'
 import { useMessagesStore } from '../stores/messages'
 import { useSysStore } from '../stores/sys'
 import { showMessage } from '../utils/utils'
-import { House } from '@element-plus/icons-vue'
+import { House, ArrowRightBold, ArrowLeftBold } from '@element-plus/icons-vue'
 const messagesStore = useMessagesStore()
 const sysStore = useSysStore()
 const messages = messagesStore.initMessages()
@@ -95,6 +95,24 @@ const openSideBarHandle = () => {
       </div>
     </div>
     <SideBar></SideBar>
+    <div class="absolute sm:right-3 sm:top-1/2 right-9 top-9">
+      <el-button
+        :icon="ArrowRightBold"
+        color="#626aef"
+        circle
+        plain
+        @click="() => messagesStore.getNextMessages(1)"
+      />
+    </div>
+    <div class="absolute sm:left-3 sm:top-1/2 left-9 top-9">
+      <el-button
+        :icon="ArrowLeftBold"
+        color="#626aef"
+        circle
+        plain
+        @click="() => messagesStore.getNextMessages(-1)"
+      />
+    </div>
   </div>
 </template>
 

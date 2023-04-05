@@ -31,7 +31,6 @@ const whiteList = (() => {
   return wl
 })()
 
-console.log(whiteList)
 const XSS = new xss.FilterXSS({
   whiteList: whiteList
 })
@@ -139,7 +138,7 @@ watch(
             buttonElem.innerHTML = '<span>复制代码</span>'
             buttonElem.addEventListener('click', async () => {
               try {
-                await toClipboard(hljs_blocks[i])
+                await toClipboard(pre)
                 showMessage('复制成功', 'success')
               } catch (e) {
                 console.error(e)
@@ -150,7 +149,7 @@ watch(
               copyCodeDiv.style.display = 'flex'
             })
             copyCodeDiv.appendChild(buttonElem)
-            hljs_blocks[i].insertAdjacentElement('beforeBegin', copyCodeDiv)
+            pre.insertAdjacentElement('beforeBegin', copyCodeDiv)
             pre.addEventListener('mouseover', () => {
               copyCodeDiv.style.display = 'flex'
             })
@@ -183,7 +182,9 @@ watch(
           style="background: transparent; width: 40px; margin-top: 5px"
         />
       </div>
-      <div class="flex flex-col justify-center w-full message-body">
+      <div
+        class="flex flex-col justify-center w-full px-2.5 py-px my-0.5 mx-0 bg-white rounded-md text-sm max-w-full"
+      >
         <div class="flex justify-between items-end">
           <div class="flex items-center gap-2 mx-1 md:hidden">
             <el-avatar
@@ -283,20 +284,12 @@ watch(
   background-color: transparent;
 }
 
-.message-body {
-  padding: 1px 10px;
-  margin: 3px 0;
-  background: #ffffff;
-  border-radius: 5px;
-  font-size: 14px;
-  max-width: 100%;
-  min-height: 30px;
-}
-
 .copy-code {
   display: flex;
   justify-content: flex-end;
   position: relative;
+  top: 12px;
+  right: 5px;
   height: 0px;
 }
 </style>
