@@ -1,11 +1,10 @@
 <script setup>
-import { reactive, ref } from 'vue'
 import MessageBox from '../components/MessageBox.vue'
 import SideBar from '../components/SideBar.vue'
 import StopRequest from '../components/StopRequest.vue'
+import AutoInput from '../components/AutoInput.vue'
 import { useMessagesStore } from '../stores/messages'
 import { useSysStore } from '../stores/sys'
-import { showMessage } from '../utils/utils'
 import { House, ArrowRightBold, ArrowLeftBold } from '@element-plus/icons-vue'
 const messagesStore = useMessagesStore()
 const sysStore = useSysStore()
@@ -26,42 +25,6 @@ const messages = messagesStore.initMessages()
 //   }
 // ])
 
-const input = ref('')
-const sending = messagesStore.sending
-
-const body = reactive({})
-
-const sendByKey = (event) => {
-  const { shiftKey, keyCode } = event
-  if (!shiftKey && keyCode === 13) {
-    event.stopPropagation()
-    event.preventDefault()
-    send()
-  }
-}
-
-const send = () => {
-  if (input.value == '') {
-    showMessage('请输入内容', 'error')
-    return
-  }
-  console.log(sending)
-  if (sending.isSending) {
-    showMessage('请等待回答完毕', 'error')
-    return
-  }
-  const Q_id = messagesStore.push({
-    typ: 'user',
-    role: 'user',
-    msg: input.value,
-    status: 'success'
-  })
-  input.value = ''
-  body.messages = messagesStore.getHistoryMsg('all')
-  messagesStore.getMessage(body)
-  messagesStore.set(Q_id, { skip: sysStore.skipHistoryMessages })
-}
-
 const openSideBarHandle = () => {
   sysStore.openSideBar = !sysStore.openSideBar
 }
@@ -79,19 +42,7 @@ const openSideBarHandle = () => {
         <div class="flex items-center mr-4">
           <el-button color="#f1f5f9" @click="openSideBarHandle" circle :icon="House"></el-button>
         </div>
-        <div class="flex gap-3 w-full">
-          <el-input
-            v-model="input"
-            :autosize="{ minRows: 1, maxRows: 4 }"
-            type="textarea"
-            placeholder="请输入 (使用Shift+Enter换行)"
-            resize="none"
-            @keydown="sendByKey"
-          />
-          <el-button color="#626aef" class="w-14 sm:w-24" style="height: 100%" @click="send" round
-            >发送</el-button
-          >
-        </div>
+        <AutoInput></AutoInput>
       </div>
     </div>
     <SideBar></SideBar>

@@ -55,8 +55,13 @@ const enter = () => {
       class="flex mx-2 sm:mx-7 my-4 sm:my-6 rounded-3xl"
       style="height: auto"
     >
-      <div>
-        <el-form label-position="top" label-width="100px" :model="setting">
+      <div class="flex flex-col gap-2">
+        <el-form
+          label-position="top"
+          label-width="100px"
+          :model="setting"
+          class="border border-gray-300 p-2 rounded-2xl"
+        >
           <el-form-item label="API URL">
             <el-input v-model="setting.api_url" placeholder="默认使用官方API" clearable />
           </el-form-item>
@@ -64,30 +69,34 @@ const enter = () => {
             <el-input
               v-model="setting.api_key"
               placeholder="官方API必须设置此项才能使用"
+              show-password
               clearable
             />
           </el-form-item>
         </el-form>
-        <el-divider />
-        <div class="flex items-center justify-between">
-          <label class="el-form-item__label">打字机效果</label>
-          <el-switch v-model="setting.stream" />
-        </div>
-        <el-divider />
-        <div class="flex flex-col items-start">
-          <label class="el-form-item__label">温度(较高的值将使输出更加随机)</label>
-          <el-slider v-model="setting.temperature" :max="2" :step="0.1" />
-        </div>
-        <el-divider />
-        <div class="flex items-center justify-between">
-          <el-tooltip
-            effect="dark"
-            content="开启后会自动打开跳过开关,适合问答模式,减少token消耗"
-            placement="top-start"
-          >
-            <label class="el-form-item__label">自动跳过</label>
-          </el-tooltip>
-          <el-switch v-model="setting.skipHistoryMessages" />
+        <div class="flex flex-col justify-center border border-gray-300 p-2 rounded-2xl">
+          <div class="flex items-center justify-between gap-20">
+            <label class="flex px-2 justify-start w-28" style="color: #606266">打字机效果</label>
+            <el-switch v-model="setting.stream" />
+          </div>
+          <el-divider style="margin: 10px 0" />
+          <div class="flex items-center justify-between gap-20">
+            <el-tooltip effect="dark" content="较高的值将使输出更加随机" placement="top-start">
+              <label class="flex px-2 justify-start w-28" style="color: #606266">温度</label>
+            </el-tooltip>
+            <el-slider v-model="setting.temperature" :max="2" :step="0.1" />
+          </div>
+          <el-divider style="margin: 10px 0" />
+          <div class="flex items-center justify-between gap-20">
+            <el-tooltip
+              effect="dark"
+              content="开启后会自动打开跳过开关,适合问答模式,减少token消耗"
+              placement="top-start"
+            >
+              <label class="flex px-2 justify-start w-28" style="color: #606266">自动跳过</label>
+            </el-tooltip>
+            <el-switch v-model="setting.skipHistoryMessages" />
+          </div>
         </div>
       </div>
       <template #footer>
