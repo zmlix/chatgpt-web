@@ -31,38 +31,40 @@ const openSideBarHandle = () => {
 </script>
 
 <template>
-  <div class="chat flex flex-col h-full px-2 sm:px-7 py-4 sm:py-6">
-    <div class="flex flex-col h-full border-0 rounded-3xl shadow-2xl shadow-indigo-900">
-      <p class="chat-title m-auto text-6xl font-semibold py-1 bg-clip-text text-transparent">
-        ChatGPT
-      </p>
-      <MessageBox :messages="messages" />
-      <StopRequest></StopRequest>
-      <div class="flex m-5">
-        <div class="flex items-center mr-4">
-          <el-button color="#f1f5f9" @click="openSideBarHandle" circle :icon="House"></el-button>
-        </div>
-        <AutoInput></AutoInput>
-      </div>
-    </div>
+  <div class="chat flex w-full h-full px-2 sm:px-7 py-4 sm:py-6 gap-2">
     <SideBar></SideBar>
-    <div class="absolute sm:right-3 sm:top-1/2 right-9 top-9">
-      <el-button
-        :icon="ArrowRightBold"
-        color="#626aef"
-        circle
-        plain
-        @click="() => messagesStore.getNextMessages(1)"
-      />
-    </div>
-    <div class="absolute sm:left-3 sm:top-1/2 left-9 top-9">
-      <el-button
-        :icon="ArrowLeftBold"
-        color="#626aef"
-        circle
-        plain
-        @click="() => messagesStore.getNextMessages(-1)"
-      />
+    <div class="flex h-full w-full">
+      <div class="relative w-0 h-0 sm:top-1/2 sm:-left-4 top-5 left-6 z-50">
+        <el-button
+          :icon="ArrowLeftBold"
+          color="#626aef"
+          circle
+          plain
+          @click="() => messagesStore.getNextMessages(-1)"
+        />
+      </div>
+      <div class="flex flex-col w-full h-full border-0 rounded-3xl shadow-2xl shadow-indigo-900">
+        <p class="chat-title m-auto text-6xl font-semibold py-1 bg-clip-text text-transparent">
+          ChatGPT
+        </p>
+        <MessageBox :messages="messages" />
+        <StopRequest></StopRequest>
+        <div class="flex m-5">
+          <div class="flex items-center mr-4">
+            <el-button color="#f1f5f9" @click="openSideBarHandle" circle :icon="House"></el-button>
+          </div>
+          <AutoInput></AutoInput>
+        </div>
+      </div>
+      <div class="relative w-0 h-0 sm:top-1/2 sm:right-4 top-5 right-14 z-50">
+        <el-button
+          :icon="ArrowRightBold"
+          color="#626aef"
+          circle
+          plain
+          @click="() => messagesStore.getNextMessages(1)"
+        />
+      </div>
     </div>
   </div>
 </template>

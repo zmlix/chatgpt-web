@@ -5,6 +5,7 @@ import { env } from '../env'
 export const useSysStore = defineStore(
   'sys',
   () => {
+    const sideBar = ref(false)
     const openSideBar = ref(false)
     const openSettingDialog = ref(false)
     const creditGrants = ref('需配置OPENAI_API_KEY')
@@ -62,6 +63,7 @@ export const useSysStore = defineStore(
     }
 
     return {
+      sideBar,
       openSideBar,
       openSettingDialog,
       setting,
@@ -81,6 +83,7 @@ export const useSysStore = defineStore(
   {
     persist: {
       paths: [
+        'sideBar',
         'setting',
         'stream',
         'temperature',

@@ -27,11 +27,11 @@ watch(sending, () => {
 </script>
 
 <template>
-  <el-scrollbar ref="scrollbarRef">
-    <div class="h-full mx-5 my-2" ref="innerRef">
+  <el-scrollbar ref="scrollbarRef" class="grid px-3">
+    <div class="h-full my-2" ref="innerRef">
       <draggable :list="messages" handle=".drag-msg" item-key="id">
         <template #item="{ element }">
-          <div>
+          <div class="w-full">
             <Message :message="element"></Message>
           </div>
         </template>

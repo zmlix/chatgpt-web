@@ -191,112 +191,108 @@ watch(
 </script>
 
 <template>
-  <div class="w-full">
-    <div class="flex items-start">
-      <div class="mx-1 hidden md:flex">
-        <el-avatar
-          v-if="message.typ == 'user'"
-          :icon="UserFilled"
-          style="background: transparent; font-size: 24px"
-        />
-        <el-avatar
-          v-else
-          :src="chatgpt"
-          :size="28"
-          style="background: transparent; width: 40px; margin-top: 5px"
-        />
-      </div>
-      <div
-        class="flex flex-col justify-center w-full px-2.5 py-px my-0.5 mx-0 bg-white rounded-md text-sm max-w-full"
-      >
-        <div class="flex justify-between items-end">
-          <div class="flex items-center gap-2 mx-1 md:hidden">
-            <el-avatar
-              v-if="message.typ == 'user'"
-              :icon="UserFilled"
-              style="background: transparent; font-size: 24px; color: black"
-            />
-            <el-avatar
-              v-else
-              :src="chatgpt_black"
-              :size="28"
-              style="background: transparent; width: 48px"
-            />
-            <div class="flex w-full">{{ getCurrentTime(message.time) }}</div>
-          </div>
-          <div class="w-full hidden md:flex">{{ getCurrentTime(message.time) }}</div>
-          <div class="w-full hover:cursor-move h-6 drag-msg"></div>
-          <div class="flex flex-col-reverse items-center sm:flex-row sm:items-start">
-            <div class="flex" v-if="message.status != 'error'">
-              <el-switch
-                class="flex sm:mt-3 my-1 p-1"
-                v-model="isMarkdown"
-                size="small"
-                inline-prompt
-                active-text="渲染"
-                inactive-text="渲染"
-                style="height: 5px"
-              />
-              <el-switch
-                class="flex sm:mt-3 my-1 p-1"
-                v-model="isSkiped"
-                size="small"
-                inline-prompt
-                active-text="跳过"
-                inactive-text="跳过"
-                style="height: 5px"
-                @change="skipMsg"
-              />
-            </div>
-            <div class="flex">
-              <div class="p-1">
-                <el-link
-                  :underline="false"
-                  :icon="isCollapse ? Expand : Fold"
-                  @click="isCollapse = !isCollapse"
-                />
-              </div>
-              <div class="p-1" v-if="message.status != 'error'">
-                <el-link :underline="false" :icon="Edit" @click="editMsg" />
-              </div>
-              <div class="p-1">
-                <el-link :underline="false" :icon="Refresh" @click="reSendMsg" />
-              </div>
-              <div class="p-1">
-                <el-link :underline="false" :icon="CloseBold" @click="delMsg" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <el-divider style="margin: 5px"></el-divider>
-        <div class="mt-2 mb-1 overflow-x-auto" v-show="!isCollapse">
-          <div v-if="!isMarkdown" class="whitespace-pre-wrap">{{ raw_msg }}</div>
-          <div v-else v-html="markdown_msg" ref="showMsgRef" class="markdown-body"></div>
-        </div>
-        <el-row :gutter="10" v-show="isEdit" class="mb-2">
-          <el-col :span="21">
-            <el-input
-              v-model="new_msg"
-              :autosize="{ minRows: 1, maxRows: 10 }"
-              type="textarea"
-              resize="none"
-              @keyup.shift.enter="editMsgEnter"
-            />
-          </el-col>
-          <el-col :span="3">
-            <el-button type="success" @click="editMsgEnter" style="width: 100%; height: 100%"
-              >修改</el-button
-            >
-          </el-col>
-        </el-row>
-      </div>
+  <div class="flex items-start">
+    <div class="mx-1 hidden md:flex">
+      <el-avatar
+        v-if="message.typ == 'user'"
+        :icon="UserFilled"
+        style="background: transparent; font-size: 24px"
+      />
+      <el-avatar
+        v-else
+        :src="chatgpt"
+        :size="28"
+        style="background: transparent; width: 40px; margin-top: 5px"
+      />
     </div>
-    <div
-      class="message-box-loading h-16 z-0"
-      v-loading="sending.isSending"
-      v-show="sending.isSending && sending.id == message.id"
-    ></div>
+    <div class="grid w-full px-2.5 py-px my-0.5 mx-0 bg-white rounded-md text-sm max-w-full">
+      <div class="flex justify-between items-end">
+        <div class="flex items-center gap-2 mx-1 md:hidden">
+          <el-avatar
+            v-if="message.typ == 'user'"
+            :icon="UserFilled"
+            style="background: transparent; font-size: 24px; color: black"
+          />
+          <el-avatar
+            v-else
+            :src="chatgpt_black"
+            :size="28"
+            style="background: transparent; width: 48px"
+          />
+          <div class="flex w-full">{{ getCurrentTime(message.time) }}</div>
+        </div>
+        <div class="w-full hidden md:flex">{{ getCurrentTime(message.time) }}</div>
+        <div class="w-full hover:cursor-move h-6 drag-msg"></div>
+        <div class="flex flex-col-reverse items-center sm:flex-row sm:items-start">
+          <div class="flex" v-if="message.status != 'error'">
+            <el-switch
+              class="flex sm:mt-3 my-1 p-1"
+              v-model="isMarkdown"
+              size="small"
+              inline-prompt
+              active-text="渲染"
+              inactive-text="渲染"
+              style="height: 5px"
+            />
+            <el-switch
+              class="flex sm:mt-3 my-1 p-1"
+              v-model="isSkiped"
+              size="small"
+              inline-prompt
+              active-text="跳过"
+              inactive-text="跳过"
+              style="height: 5px"
+              @change="skipMsg"
+            />
+          </div>
+          <div class="flex">
+            <div class="p-1">
+              <el-link
+                :underline="false"
+                :icon="isCollapse ? Expand : Fold"
+                @click="isCollapse = !isCollapse"
+              />
+            </div>
+            <div class="p-1" v-if="message.status != 'error'">
+              <el-link :underline="false" :icon="Edit" @click="editMsg" />
+            </div>
+            <div class="p-1">
+              <el-link :underline="false" :icon="Refresh" @click="reSendMsg" />
+            </div>
+            <div class="p-1">
+              <el-link :underline="false" :icon="CloseBold" @click="delMsg" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <el-divider style="margin: 5px"></el-divider>
+      <div class="mt-2 mb-1 overflow-x-auto" v-show="!isCollapse">
+        <div v-if="!isMarkdown" class="whitespace-pre-wrap">{{ raw_msg }}</div>
+        <div v-else v-html="markdown_msg" ref="showMsgRef" class="markdown-body"></div>
+      </div>
+      <el-row :gutter="10" v-show="isEdit" class="mb-2">
+        <el-col :span="21">
+          <el-input
+            v-model="new_msg"
+            :autosize="{ minRows: 1, maxRows: 10 }"
+            type="textarea"
+            resize="none"
+            @keyup.shift.enter="editMsgEnter"
+          />
+        </el-col>
+        <el-col :span="3">
+          <el-button type="success" @click="editMsgEnter" style="width: 100%; height: 100%"
+            >修改</el-button
+          >
+        </el-col>
+      </el-row>
+    </div>
   </div>
+  <div
+    class="message-box-loading h-16 z-0"
+    v-loading="sending.isSending"
+    v-show="sending.isSending && sending.id == message.id"
+  ></div>
 </template>
 
 <style>

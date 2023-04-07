@@ -72,7 +72,9 @@ watch(isOpen, (val) => {
 const input = ref('')
 const search = (val) => {
   prompts.value = sysStore.promptList.filter(
-    (item) => item.act.toLowerCase().indexOf(val.toLowerCase()) >= 0
+    (item) =>
+      item.act.toLowerCase().indexOf(val.toLowerCase()) >= 0 ||
+      item.prompt.toLowerCase().indexOf(val.toLowerCase()) >= 0
   )
 }
 

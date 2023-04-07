@@ -18,7 +18,8 @@ const setting = ref({
   api_key: '',
   stream: true,
   temperature: 1,
-  skipHistoryMessages: false
+  skipHistoryMessages: false,
+  sideBar: false
 })
 
 const openSettingDialogHandle = () => {
@@ -28,6 +29,7 @@ const openSettingDialogHandle = () => {
   setting.value.stream = sysStore.stream
   setting.value.temperature = sysStore.temperature
   setting.value.skipHistoryMessages = sysStore.skipHistoryMessages
+  setting.value.sideBar = sysStore.sideBar
 }
 
 const enter = () => {
@@ -38,6 +40,7 @@ const enter = () => {
   sysStore.stream = setting.value.stream
   sysStore.temperature = setting.value.temperature
   sysStore.skipHistoryMessages = setting.value.skipHistoryMessages
+  sysStore.sideBar = setting.value.sideBar
   sysStore.openSettingDialog = false
 }
 </script>
@@ -75,6 +78,17 @@ const enter = () => {
           </el-form-item>
         </el-form>
         <div class="flex flex-col justify-center border border-gray-300 p-2 rounded-2xl">
+          <div class="flex items-center justify-between gap-20">
+            <el-tooltip
+              effect="dark"
+              content="开启后侧边栏可常驻,移动端不支持"
+              placement="top-start"
+            >
+              <label class="flex px-2 justify-start w-28" style="color: #606266">侧边栏模式</label>
+            </el-tooltip>
+            <el-switch v-model="setting.sideBar" :disabled="size !== 350" />
+          </div>
+          <el-divider style="margin: 10px 0" />
           <div class="flex items-center justify-between gap-20">
             <label class="flex px-2 justify-start w-28" style="color: #606266">打字机效果</label>
             <el-switch v-model="setting.stream" />
