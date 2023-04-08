@@ -63,16 +63,15 @@ const searchPrompts = (queryString, cb) => {
 }
 
 const selectPrompt = (prompt) => {
-  console.log(prompt, '?')
-  isSearchPrompt.value = false
   if (prompt.prompt) {
     input.value = prompt.prompt
-  } else {
+  } else if (isSearchPrompt.value) {
     send()
     setTimeout(() => {
       input.value = ''
     }, 301)
   }
+  isSearchPrompt.value = false
 }
 </script>
 
