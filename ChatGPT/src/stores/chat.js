@@ -34,7 +34,7 @@ export const useChatStore = defineStore(
     function saveChat(new_chat) {
       const index = chats.value.findIndex((chat) => chat.idx === new_chat.idx)
       if (index !== -1) {
-        chats.value[index].chat = new_chat
+        chats.value[index] = new_chat
       }
     }
 
@@ -99,6 +99,9 @@ export const useChatStore = defineStore(
       afterRestore: (ctx) => {
         console.log(`恢复 '${ctx.store.$id}'`)
         ctx.store.chats = ctx.store.chats.map((chat) => {
+          if (!Object.prototype.hasOwnProperty.call(chat, 'display')) {
+            chat.display = 'card'
+          }
           chat.messages = chat.messages.map((message) => {
             if (message.typ === 'user') {
               message.role = 'user'

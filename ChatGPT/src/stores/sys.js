@@ -7,6 +7,7 @@ export const useSysStore = defineStore(
   () => {
     const sideBar = ref(false)
     const openSideBar = ref(false)
+    const display = ref('card')
     const openSettingDialog = ref(false)
     const creditGrants = ref('需配置OPENAI_API_KEY')
     const setting = ref({
@@ -65,6 +66,7 @@ export const useSysStore = defineStore(
     return {
       sideBar,
       openSideBar,
+      display,
       openSettingDialog,
       setting,
       set,
@@ -85,6 +87,7 @@ export const useSysStore = defineStore(
       paths: [
         'sideBar',
         'setting',
+        'display',
         'stream',
         'temperature',
         'skipHistoryMessages',

@@ -15,6 +15,7 @@ export const useMessagesStore = defineStore('messages', () => {
   const mId = ref(random32BitNumber())
   const title = ref('')
   const messages = ref([])
+  const display = ref('card')
 
   const length = computed(() => messages.value.length)
   const sending = reactive({
@@ -34,12 +35,20 @@ export const useMessagesStore = defineStore('messages', () => {
     sending.id = val
   }
 
+  function setDisplay(val) {
+    display.value = val
+    let chat = chatStore.getCurrentChat()
+    chat.display = val
+    chatStore.saveChat(chat)
+  }
+
   function setMessages(chat) {
     if (chat) {
       chatStore.currentChatIdx = chat.idx
       messages.value = chat.messages
       mId.value = chat.idx
       title.value = chat.title
+      display.value = chat.display || 'card'
     }
   }
 
@@ -47,10 +56,12 @@ export const useMessagesStore = defineStore('messages', () => {
     if (chatStore.length === 0) {
       mId.value = random32BitNumber()
       messages.value = []
+      display.value = sysStore.display
       chatStore.addNewChat({
         idx: mId.value,
         title: 'New Chat ' + (chatStore.length + 1),
-        messages: messages.value
+        messages: messages.value,
+        display: sysStore.display
       })
       setMessages(chatStore.getChatByIndex(0))
     }
@@ -62,7 +73,8 @@ export const useMessagesStore = defineStore('messages', () => {
     chatStore.addNewChat({
       idx: random32BitNumber(),
       title: 'New Chat ' + (chatStore.length + 1),
-      messages: ref([])
+      messages: ref([]),
+      display: sysStore.display
     })
     setMessages(chatStore.getChatByIndex(-1))
   }
@@ -265,6 +277,8 @@ export const useMessagesStore = defineStore('messages', () => {
 
   return {
     messages,
+    display,
+    setDisplay,
     length,
     initMessages,
     newMessages,

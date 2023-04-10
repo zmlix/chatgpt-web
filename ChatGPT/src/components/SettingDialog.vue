@@ -19,7 +19,8 @@ const setting = ref({
   stream: true,
   temperature: 1,
   skipHistoryMessages: false,
-  sideBar: false
+  sideBar: false,
+  display: 'card'
 })
 
 const openSettingDialogHandle = () => {
@@ -30,6 +31,7 @@ const openSettingDialogHandle = () => {
   setting.value.temperature = sysStore.temperature
   setting.value.skipHistoryMessages = sysStore.skipHistoryMessages
   setting.value.sideBar = sysStore.sideBar
+  setting.value.display = sysStore.display
 }
 
 const enter = () => {
@@ -42,6 +44,7 @@ const enter = () => {
   sysStore.skipHistoryMessages = setting.value.skipHistoryMessages
   sysStore.sideBar = setting.value.sideBar
   sysStore.openSettingDialog = false
+  sysStore.display = setting.value.display
 }
 </script>
 
@@ -84,9 +87,20 @@ const enter = () => {
               content="开启后侧边栏可常驻,移动端不支持"
               placement="top-start"
             >
-              <label class="flex px-2 justify-start w-28" style="color: #606266">侧边栏模式</label>
+              <label class="flex px-2 justify-start w-28" style="color: #606266">常驻侧边栏</label>
             </el-tooltip>
             <el-switch v-model="setting.sideBar" :disabled="size !== 350" />
+          </div>
+          <el-divider style="margin: 10px 0" />
+          <div class="flex items-center justify-between gap-20">
+            <el-tooltip
+              effect="dark"
+              content="新建会话默认使用卡片模式,开启后默认使用对话模式"
+              placement="top-start"
+            >
+              <label class="flex px-2 justify-start w-28" style="color: #606266">展示方式</label>
+            </el-tooltip>
+            <el-switch v-model="setting.display" :active-value="'chat'" :inactive-value="'card'" />
           </div>
           <el-divider style="margin: 10px 0" />
           <div class="flex items-center justify-between gap-20">

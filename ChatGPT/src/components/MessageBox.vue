@@ -10,6 +10,10 @@ defineProps({
   messages: {
     type: Array,
     required: true
+  },
+  display: {
+    type: String,
+    required: true
   }
 })
 
@@ -27,12 +31,12 @@ watch(sending, () => {
 </script>
 
 <template>
-  <el-scrollbar ref="scrollbarRef" class="grid px-3">
+  <el-scrollbar ref="scrollbarRef" class="grid pl-3 pr-5">
     <div class="h-full my-2" ref="innerRef">
       <draggable :list="messages" handle=".drag-msg" item-key="id">
         <template #item="{ element }">
           <div class="w-full">
-            <Message :message="element"></Message>
+            <Message :message="element" :display="display"></Message>
           </div>
         </template>
       </draggable>
