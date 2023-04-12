@@ -57,6 +57,7 @@ const whiteList = (() => {
     wl[key].push('class', 'style')
   }
   wl.annotation.push('encoding')
+  wl.ol.push('start')
   return wl
 })()
 
@@ -299,7 +300,12 @@ watch(
           </div>
         </div>
         <el-divider style="margin: 5px" v-show="!chatMode || menu"></el-divider>
-        <div class="mt-2 mb-1 overflow-x-auto" v-show="!isCollapse" @click="() => (menu = !menu)">
+        <div
+          class="mt-2 mb-1 overflow-x-auto"
+          style="min-height: 20px"
+          v-show="!isCollapse"
+          @click="() => (menu = !menu)"
+        >
           <div v-if="!isMarkdown" class="whitespace-pre-wrap">{{ raw_msg }}</div>
           <div v-else v-html="markdown_msg" ref="showMsgRef" class="markdown-body"></div>
         </div>

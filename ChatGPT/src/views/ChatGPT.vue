@@ -1,4 +1,5 @@
 <script setup>
+import LogoMenu from '../components/LogoMenu.vue'
 import MessageBox from '../components/MessageBox.vue'
 import SideBar from '../components/SideBar.vue'
 import StopRequest from '../components/StopRequest.vue'
@@ -44,35 +45,7 @@ const openSideBarHandle = () => {
         />
       </div>
       <div class="flex flex-col w-full h-full border-0 rounded-3xl shadow-2xl shadow-indigo-900">
-        <el-popover
-          placement="top-start"
-          :width="200"
-          trigger="click"
-          :teleported="false"
-          :persistent="false"
-        >
-          <template #reference>
-            <p
-              class="chat-title m-auto text-6xl font-semibold py-1 bg-clip-text text-transparent select-none hover:cursor-pointer"
-            >
-              ChatGPT
-            </p>
-          </template>
-          <div>
-            <div class="flex items-center justify-between">
-              <label class="flex px-2 justify-start w-28" style="color: #606266"
-                >{{ messagesStore.display === 'card' ? '卡片' : '对话' }}模式</label
-              >
-              <el-switch
-                v-model="messagesStore.display"
-                :active-value="'chat'"
-                :inactive-value="'card'"
-                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #409eff"
-                @change="(val) => messagesStore.setDisplay(val)"
-              />
-            </div>
-          </div>
-        </el-popover>
+        <LogoMenu title="ChatGPT"></LogoMenu>
         <MessageBox :messages="messages" :display="messagesStore.display" />
         <StopRequest></StopRequest>
         <div class="flex m-5">
@@ -98,10 +71,5 @@ const openSideBarHandle = () => {
 <style scoped>
 .chat {
   background: linear-gradient(to right bottom, #ab79c2, #8a84bf, #6b91c1);
-}
-
-.chat-title {
-  font-family: Inter;
-  background-image: linear-gradient(135deg, #756aee 53%, #ee756a 10%);
 }
 </style>

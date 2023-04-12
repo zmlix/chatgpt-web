@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { Operation } from '@element-plus/icons-vue'
-
+import { Operation, InfoFilled } from '@element-plus/icons-vue'
 import { useSysStore } from '../stores/sys.js'
 import { env } from '../env'
 const sysStore = useSysStore()
@@ -87,7 +86,9 @@ const enter = () => {
               content="开启后侧边栏可常驻,移动端不支持"
               placement="top-start"
             >
-              <label class="flex px-2 justify-start w-28" style="color: #606266">常驻侧边栏</label>
+              <label class="flex items-center px-2 justify-start w-30 gap-1" style="color: #606266"
+                >常驻侧边栏<el-icon><InfoFilled /></el-icon
+              ></label>
             </el-tooltip>
             <el-switch v-model="setting.sideBar" :disabled="size !== 350" />
           </div>
@@ -98,7 +99,9 @@ const enter = () => {
               content="新建会话默认使用卡片模式,开启后默认使用对话模式"
               placement="top-start"
             >
-              <label class="flex px-2 justify-start w-28" style="color: #606266">展示方式</label>
+              <label class="flex items-center px-2 justify-start w-28 gap-1" style="color: #606266"
+                >展示方式<el-icon><InfoFilled /></el-icon
+              ></label>
             </el-tooltip>
             <el-switch v-model="setting.display" :active-value="'chat'" :inactive-value="'card'" />
           </div>
@@ -110,7 +113,9 @@ const enter = () => {
           <el-divider style="margin: 10px 0" />
           <div class="flex items-center justify-between gap-20">
             <el-tooltip effect="dark" content="较高的值将使输出更加随机" placement="top-start">
-              <label class="flex px-2 justify-start w-28" style="color: #606266">温度</label>
+              <label class="flex items-center px-2 justify-start w-32 gap-1" style="color: #606266"
+                >温度<el-icon><InfoFilled /></el-icon
+              ></label>
             </el-tooltip>
             <el-slider v-model="setting.temperature" :max="2" :step="0.1" />
           </div>
@@ -121,7 +126,9 @@ const enter = () => {
               content="开启后会自动打开跳过开关,适合问答模式,减少token消耗"
               placement="top-start"
             >
-              <label class="flex px-2 justify-start w-28" style="color: #606266">自动跳过</label>
+              <label class="flex items-center px-2 justify-start w-28 gap-1" style="color: #606266"
+                >自动跳过<el-icon><InfoFilled /></el-icon
+              ></label>
             </el-tooltip>
             <el-switch v-model="setting.skipHistoryMessages" />
           </div>

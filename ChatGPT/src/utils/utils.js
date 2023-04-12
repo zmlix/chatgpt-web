@@ -20,6 +20,17 @@ export const showMessage = (msg, type) => {
   ElMessage({ message: msg, type: type })
 }
 
+export const downloadMarkdown = (data, name) => {
+  const fileContent = data
+  const blob = new Blob([fileContent], { type: 'text/plain' })
+  const downloadLink = document.createElement('a')
+  downloadLink.href = URL.createObjectURL(blob)
+  downloadLink.download = name
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  document.body.removeChild(downloadLink)
+}
+
 export const downloadJson = (data) => {
   const jsonString = JSON.stringify(data)
   const blob = new Blob([jsonString], { type: 'application/json' })

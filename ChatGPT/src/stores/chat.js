@@ -110,7 +110,7 @@ export const useChatStore = defineStore(
             } else if (message.typ === 'system') {
               message.role = 'system'
             } else {
-              message.role = null
+              message.role = 'assistant'
             }
             return message
           })

@@ -276,6 +276,7 @@ export const useMessagesStore = defineStore('messages', () => {
   }
 
   return {
+    title,
     messages,
     display,
     setDisplay,
