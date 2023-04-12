@@ -1,6 +1,7 @@
 FROM node:lts-alpine as builder
 WORKDIR /app
 COPY . .
+ENV NODE_OPTIONS=--max-old-space-size=4096
 RUN npm install
 RUN npm run build
 
