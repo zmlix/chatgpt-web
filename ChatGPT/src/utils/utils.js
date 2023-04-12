@@ -20,6 +20,17 @@ export const showMessage = (msg, type) => {
   ElMessage({ message: msg, type: type })
 }
 
+export const downloadImg = (data, name) => {
+  const canvas = data
+  const dataURL = canvas.toDataURL('image/png')
+  const downloadLink = document.createElement('a')
+  downloadLink.href = dataURL
+  downloadLink.download = name
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  document.body.removeChild(downloadLink)
+}
+
 export const downloadMarkdown = (data, name) => {
   const fileContent = data
   const blob = new Blob([fileContent], { type: 'text/plain' })

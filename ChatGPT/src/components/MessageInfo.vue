@@ -210,7 +210,7 @@ watch(
 </script>
 
 <template>
-  <div :class="{ 'mb-5': chatMode }">
+  <div :class="{ 'mb-5': chatMode }" class="message-info pr-1">
     <span
       v-if="chatMode"
       class="flex text-xs"
@@ -269,7 +269,7 @@ watch(
                 style="height: 5px"
               />
               <el-switch
-                class="flex sm:mt-3 my-1 p-1"
+                class="skip-msg flex sm:mt-3 my-1 p-1"
                 v-model="isSkiped"
                 size="small"
                 inline-prompt

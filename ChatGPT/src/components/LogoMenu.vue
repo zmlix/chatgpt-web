@@ -1,6 +1,7 @@
 <script setup>
 import { InfoFilled } from '@element-plus/icons-vue'
-import { getCurrentTime, downloadMarkdown } from '../utils/utils'
+import { getCurrentTime, showMessage, downloadMarkdown, downloadImg } from '../utils/utils'
+import html2canvas from 'html2canvas'
 import { useMessagesStore } from '../stores/messages'
 const messagesStore = useMessagesStore()
 
@@ -11,7 +12,44 @@ defineProps({
   }
 })
 
+const export_img = () => {
+  showMessage('正在导出...成功后会立即下载', 'success')
+  html2canvas(document.querySelector('.message-box'), {
+    ignoreElements: (element) => {
+      if (element.classList.contains('message-info')) {
+        return (
+          element.querySelector('.skip-msg').querySelector('input').getAttribute('aria-checked') ===
+          'true'
+        )
+      }
+      return false
+    },
+    onclone: (dom) => {
+      if (messagesStore.display === 'chat') {
+        dom.querySelector('.message-box').style.color = 'white'
+        dom
+          .querySelector('.message-box')
+          .querySelectorAll('span')
+          .forEach((span) => (span.style.paddingBottom = '5px'))
+      }
+      if (messagesStore.display === 'card') {
+        dom
+          .querySelector('.message-box')
+          .querySelectorAll('span.is-text')
+          .forEach((span) => (span.style.paddingBottom = '15px'))
+      }
+    },
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: '#374151'
+  }).then(function (canvas) {
+    showMessage('导出成功,正在下载...', 'success')
+    downloadImg(canvas, `${messagesStore.title}.png`)
+  })
+}
+
 const export_markdown = () => {
+  showMessage('正在导出...成功后会立即下载', 'success')
   console.log('导出markdown', messagesStore.title)
   const messages = messagesStore.getHistoryMsg('all')
   const md =
@@ -48,12 +86,11 @@ const export_markdown = () => {
       <div class="flex items-center justify-between">
         <el-tooltip effect="dark" content="跳过的对话将不会被导出" placement="top-start">
           <label class="flex items-center px-2 justify-start w-28 gap-1" style="color: #606266"
-            >导出对话<el-icon>
-              <InfoFilled /> </el-icon
+            >导出对话<el-icon> <InfoFilled /> </el-icon
           ></label>
         </el-tooltip>
         <el-button-group>
-          <el-button type="primary">图片</el-button>
+          <el-button type="primary" @click="export_img">图片</el-button>
           <el-button type="primary" @click="export_markdown">Markdown</el-button>
         </el-button-group>
       </div>

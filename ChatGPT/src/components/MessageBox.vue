@@ -32,7 +32,7 @@ watch(sending, () => {
 
 <template>
   <el-scrollbar ref="scrollbarRef" class="grid pl-3 pr-5">
-    <div class="h-full my-2" ref="innerRef">
+    <div class="message-box h-full my-2" ref="innerRef">
       <draggable :list="messages" handle=".drag-msg" item-key="id">
         <template #item="{ element }">
           <div class="w-full">
