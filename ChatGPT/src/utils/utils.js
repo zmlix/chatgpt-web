@@ -1,5 +1,4 @@
 import { ElMessage } from 'element-plus'
-import { saveAs } from 'file-saver'
 import markdown from 'markdown-it'
 import hljs from 'markdown-it-highlightjs'
 import katex from 'markdown-it-katex'
@@ -75,20 +74,41 @@ export const showMessage = (msg, type) => {
 
 export const downloadImg = (data, name) => {
   const canvas = data
-  canvas.toBlob(function (blob) {
-    saveAs(blob, name)
-  })
+  const dataURL = canvas.toDataURL('image/png')
+  const downloadLink = document.createElement('a')
+  downloadLink.href = dataURL
+  downloadLink.download = name
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  setTimeout(() => {
+    document.body.removeChild(downloadLink)
+  }, 1000)
 }
 
 export const downloadMarkdown = (data, name) => {
-  const blob = new Blob([data], { type: 'text/plain;charset=utf-8' })
-  saveAs(blob, name)
+  const fileContent = data
+  const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' })
+  const downloadLink = document.createElement('a')
+  downloadLink.href = URL.createObjectURL(blob)
+  downloadLink.download = name
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  setTimeout(() => {
+    document.body.removeChild(downloadLink)
+  }, 1000)
 }
 
 export const downloadJson = (data) => {
   const jsonString = JSON.stringify(data)
-  const blob = new Blob([jsonString], { type: 'application/json' })
-  saveAs(blob, 'chats.json')
+  const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8' })
+  const downloadLink = document.createElement('a')
+  downloadLink.href = URL.createObjectURL(blob)
+  downloadLink.download = 'chats.json'
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  setTimeout(() => {
+    document.body.removeChild(downloadLink)
+  }, 1000)
 }
 
 export const uploadJson = (file, fn) => {

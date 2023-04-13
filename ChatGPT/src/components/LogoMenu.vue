@@ -121,8 +121,7 @@ const export_markdown = () => {
       <div class="flex items-center justify-between">
         <el-tooltip effect="dark" content="跳过的对话将不会被导出" placement="top-start">
           <label class="flex items-center px-2 justify-start w-28 gap-1" style="color: #606266"
-            >导出对话<el-icon>
-              <InfoFilled /> </el-icon
+            >导出对话<el-icon> <InfoFilled /> </el-icon
           ></label>
         </el-tooltip>
         <el-button-group>
