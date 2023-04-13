@@ -1,17 +1,12 @@
 <script setup>
 import { Refresh, UserFilled } from '@element-plus/icons-vue'
 import { ref, computed, watch } from 'vue'
-import xss from 'xss'
 import 'github-markdown-css'
-import markdown from 'markdown-it'
-import hljs from 'markdown-it-highlightjs'
-import katex from 'markdown-it-katex'
-import md_tb from 'markdown-it-multimd-table'
 import { Edit, Fold, Expand, CloseBold } from '@element-plus/icons-vue'
 import chatgpt from '../assets/ChatGPT_white.png'
 import chatgpt_black from '../assets/ChatGPT.png'
 import useClipboard from 'vue-clipboard3'
-import { showMessage, getCurrentTime } from '../utils/utils'
+import { showMessage, getCurrentTime, XSS, MD } from '../utils/utils'
 import { useMessagesStore } from '../stores/messages'
 const messagesStore = useMessagesStore()
 const sending = messagesStore.sending
@@ -29,55 +24,8 @@ const props = defineProps({
 
 const menu = ref(false)
 
-const whiteList = (() => {
-  let wl = xss.getDefaultWhiteList()
-  let mathML = [
-    'math',
-    'mi',
-    'mn',
-    'mo',
-    'ms',
-    'msup',
-    'msub',
-    'mfrac',
-    'mroot',
-    'msqrt',
-    'mtable',
-    'mtr',
-    'mtd',
-    'mrow',
-    'mmultiscripts',
-    'semantics',
-    'annotation'
-  ]
-  for (var i = 0; i < mathML.length; i++) {
-    wl[mathML[i]] = []
-  }
-  for (var key in wl) {
-    wl[key].push('class', 'style')
-  }
-  wl.annotation.push('encoding')
-  wl.ol.push('start')
-  return wl
-})()
-
-const XSS = new xss.FilterXSS({
-  whiteList: whiteList,
-  css: false
-})
-
-const md = markdown({
-  html: true,
-  linkify: true,
-  typographer: false,
-  breaks: true
-})
-  .use(katex)
-  .use(hljs)
-  .use(md_tb)
-
 const markdown_msg = computed(() => {
-  return XSS.process(md.render(props.message.msg || ''))
+  return XSS.process(MD.render(props.message.msg || ''))
 })
 
 const raw_msg = computed(() => {
@@ -210,7 +158,7 @@ watch(
 </script>
 
 <template>
-  <div :class="{ 'mb-5': chatMode }" class="message-info pr-1">
+  <div :class="{ 'mb-5': chatMode }" class="message-info px-1">
     <span
       v-if="chatMode"
       class="flex text-xs"

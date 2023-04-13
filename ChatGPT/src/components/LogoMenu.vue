@@ -1,7 +1,8 @@
 <script setup>
 import { InfoFilled } from '@element-plus/icons-vue'
-import { getCurrentTime, showMessage, downloadMarkdown, downloadImg } from '../utils/utils'
+import { getCurrentTime, showMessage, downloadMarkdown, downloadImg, XSS, MD } from '../utils/utils'
 import html2canvas from 'html2canvas'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import { useMessagesStore } from '../stores/messages'
 const messagesStore = useMessagesStore()
 
@@ -12,15 +13,46 @@ defineProps({
   }
 })
 
+const preview = (data = '', type = 'md') => {
+  ElMessageBox.confirm(
+    `<div class="preview markdown-body overflow-auto p-2" style="height: 66vh">
+      ${type === 'md' ? XSS.process(MD.render(data || '')) : ''}
+    </div>`,
+    '预览',
+    {
+      dangerouslyUseHTMLString: true,
+      distinguishCancelAndClose: true,
+      confirmButtonText: '下载',
+      cancelButtonText: '取消'
+    }
+  ).then(() => {
+    if (type === 'md') {
+      downloadMarkdown(data, `${messagesStore.title}.md`)
+    } else if (type === 'png') {
+      downloadImg(data, `${messagesStore.title}.png`)
+    }
+    ElMessage({
+      type: 'success',
+      message: '下载成功'
+    })
+  })
+}
+
 const export_img = () => {
-  showMessage('正在导出...成功后会立即下载', 'success')
+  showMessage('正在导出...', 'success')
   html2canvas(document.querySelector('.message-box'), {
     ignoreElements: (element) => {
       if (element.classList.contains('message-info')) {
-        return (
-          element.querySelector('.skip-msg').querySelector('input').getAttribute('aria-checked') ===
-          'true'
-        )
+        if (element.querySelector('.skip-msg')) {
+          return (
+            element
+              .querySelector('.skip-msg')
+              .querySelector('input')
+              .getAttribute('aria-checked') === 'true'
+          )
+        } else {
+          return true
+        }
       }
       return false
     },
@@ -43,13 +75,16 @@ const export_img = () => {
     allowTaint: true,
     backgroundColor: '#374151'
   }).then(function (canvas) {
-    showMessage('导出成功,正在下载...', 'success')
-    downloadImg(canvas, `${messagesStore.title}.png`)
+    console.log(canvas)
+    preview(canvas, 'png')
+    setTimeout(() => {
+      document.querySelector('.preview').appendChild(canvas)
+    }, 500)
   })
 }
 
 const export_markdown = () => {
-  showMessage('正在导出...成功后会立即下载', 'success')
+  showMessage('正在导出...', 'success')
   console.log('导出markdown', messagesStore.title)
   const messages = messagesStore.getHistoryMsg('all')
   const md =
@@ -57,7 +92,7 @@ const export_markdown = () => {
     messages
       .map((msg) => `### ${msg.role} \n\`\`\`\`markdown\n${msg.content}\n\`\`\`\``)
       .join('\n---\n')
-  downloadMarkdown(md, `${messagesStore.title}.md`)
+  preview(md, 'md')
 }
 </script>
 
@@ -86,7 +121,8 @@ const export_markdown = () => {
       <div class="flex items-center justify-between">
         <el-tooltip effect="dark" content="跳过的对话将不会被导出" placement="top-start">
           <label class="flex items-center px-2 justify-start w-28 gap-1" style="color: #606266"
-            >导出对话<el-icon> <InfoFilled /> </el-icon
+            >导出对话<el-icon>
+              <InfoFilled /> </el-icon
           ></label>
         </el-tooltip>
         <el-button-group>
