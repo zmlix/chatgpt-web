@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { SSE } from 'sse'
 import { env } from '../env'
+import { formatDate } from '../utils/utils'
 
 const DEFAULT_TIMEOUT = 60 * 1000
 const chatRequest = (data) => {
@@ -21,7 +22,8 @@ const axiosConfig = {
   headers: {
     'Content-Type': 'application/json'
   },
-  proxy: env.proxy || {}
+  proxy: env.proxy || {},
+  baseURL: env.apiURL.match(/^(https?:\/\/[^/]+\/)/)[1]
 }
 
 const ChatGPTApi = axios.create(axiosConfig)
@@ -69,17 +71,36 @@ export const post_GetMessage = (
   }
 }
 
-const CreditGrantsApi = axios.create(axiosConfig)
-export const get_GetCreditGrants = (api_url, api_key) => {
-  let url = api_url
-  if (api_url.indexOf('api.openai.com') >= 0) {
-    url = 'https://api.openai.com/dashboard/billing/credit_grants'
-  }
-  return CreditGrantsApi.get(url, {
+const SubscriptionApi = axios.create(axiosConfig)
+export const get_GetSubscription = (api_key) => {
+  return SubscriptionApi.get('/v1/dashboard/billing/subscription', {
     headers: {
       Authorization: 'Bearer ' + api_key
     }
   })
+}
+
+const CreditGrantsApi = axios.create(axiosConfig)
+export const get_GetCreditGrants = (api_url, api_key) => {
+  return CreditGrantsApi.get(api_url, {
+    headers: {
+      Authorization: 'Bearer ' + api_key
+    }
+  })
+}
+
+const UsageApi = axios.create(axiosConfig)
+export const get_GetUsage = (api_key, start_date, end_date) => {
+  return UsageApi.get(
+    `/v1/dashboard/billing/usage?start_date=${formatDate(start_date)}&end_date=${formatDate(
+      end_date
+    )}`,
+    {
+      headers: {
+        Authorization: 'Bearer ' + api_key
+      }
+    }
+  )
 }
 
 const PromptApi = axios.create(axiosConfig)

@@ -5,7 +5,7 @@ import { showMessage } from '../utils/utils'
 import { useChatStore } from '../stores/chat'
 import { useSysStore } from '../stores/sys'
 import { useMessagesStore } from '../stores/messages'
-import { get_GetCreditGrants } from '../api/api'
+import { get_GetCreditGrants, get_GetSubscription, get_GetUsage } from '../api/api'
 import draggable from 'vuedraggable'
 import ChatCard from './ChatCard.vue'
 import SettingDialog from './SettingDialog.vue'
@@ -46,13 +46,40 @@ const getCreditGrants = async () => {
     showMessage('正在获取余额中...', 'info')
     return
   }
-  sysStore.creditGrants = '获取中...'
+  sysStore.creditGrants = '查询中...'
   isGetCreditGrants.value = true
+
+  const now = new Date()
+  const startDate = new Date(now - 90 * 24 * 60 * 60 * 1000)
+  const endDate = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+
   try {
-    const response = await get_GetCreditGrants(sysStore.API_URL, sysStore.API_KEY)
-    sysStore.creditGrants = response.data.total_available.toFixed(8) + ' USD'
+    if (sysStore.API_URL.indexOf('api.openai.com') >= 0) {
+      const subscription = await (await get_GetSubscription(sysStore.API_KEY)).data
+      const t_now = Math.floor(Date.now() / 1000)
+      const t_expire = subscription.access_until
+      if (t_now > t_expire) {
+        sysStore.creditGrants = '免费额度已过期,查询账户额度中...'
+      }
+
+      const totalAmount = subscription.hard_limit_usd
+      const is_subsrcibed = subscription.has_payment_method
+
+      let usage = await (await get_GetUsage(sysStore.API_KEY, startDate, endDate)).data
+      let totalUsage = usage.total_usage / 100
+
+      if (is_subsrcibed) {
+        const startDate = new Date(now - (now.getDate() - 1) * 24 * 60 * 60 * 1000)
+        usage = await (await get_GetUsage(sysStore.API_KEY, startDate, endDate)).data
+        totalUsage = usage.total_usage / 100
+      }
+      sysStore.creditGrants = `${(totalAmount - totalUsage).toFixed(5)} USD`
+    } else {
+      const response = await get_GetCreditGrants(sysStore.API_URL, sysStore.API_KEY)
+      sysStore.creditGrants = response.data.total_available.toFixed(8) + ' USD'
+    }
   } catch (error) {
-    sysStore.creditGrants = '获取失败'
+    sysStore.creditGrants = '查询失败,请登录OpenAI进行查看'
     console.log(error)
   } finally {
     isGetCreditGrants.value = false
@@ -61,7 +88,6 @@ const getCreditGrants = async () => {
 </script>
 
 <template>
-  <!-- <div class="p-7 bg-white rounded-3xl" style="height: auto;" v-if="sysStore.openSideBar"> -->
   <div class="flex flex-col h-full w-full">
     <div
       class="flex items-center justify-between h-8 mb-2 pb-2 pl-2 border-b border-dashed border-b-gray-400"
@@ -110,5 +136,4 @@ const getCreditGrants = async () => {
       </span>
     </div>
   </div>
-  <!-- </div> -->
 </template>
