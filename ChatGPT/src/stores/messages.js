@@ -144,7 +144,7 @@ export const useMessagesStore = defineStore('messages', () => {
         try {
           error_msg = JSON.parse(e.data)
         } catch (error) {
-          error_msg = { details: '未知错误,请先检查代理是否正确' }
+          error_msg = { details: '未知错误' }
         }
         del(streamId)
         pushMessage(
@@ -184,7 +184,7 @@ export const useMessagesStore = defineStore('messages', () => {
           try {
             error_msg = error.response.data
           } catch (error) {
-            error_msg = { details: '未知错误,请先检查代理是否正确' }
+            error_msg = { details: '未知错误' }
           }
           pushMessage(
             '<font color="red">Error: 请求出错</font>\n' +
@@ -263,10 +263,8 @@ export const useMessagesStore = defineStore('messages', () => {
     filteredMessages = filteredMessages.filter((message) => message.role)
     const _messages = filteredMessages.reduceRight(
       (acc, curr) => {
-        if (acc.total + curr.msg.length <= 2000) {
-          acc.total += curr.msg.length
-          acc.messages.unshift({ role: curr.role, content: curr.msg })
-        }
+        acc.total += curr.msg.length
+        acc.messages.unshift({ role: curr.role, content: curr.msg })
         return acc
       },
       { total: 0, messages: [] }
