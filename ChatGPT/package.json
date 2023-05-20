@@ -10,7 +10,6 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@itisbit/markdown-it-katex": "^4.0.1",
     "axios": "^1.3.4",
     "element-plus": "^2.3.0",
     "github-markdown-css": "^5.2.0",
