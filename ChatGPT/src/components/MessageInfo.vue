@@ -72,6 +72,7 @@ const reSendMsg = () => {
   const msg_id = props.message.id
   messagesStore.setSendingId(msg_id)
   messagesStore.set(msg_id, { typ: 'user' })
+  messagesStore.set(msg_id, { role: 'user' })
   messagesStore.getMessage(
     { messages: messagesStore.getHistoryMsg('part', { id: msg_id }) },
     { insert: { id: msg_id } }
@@ -273,6 +274,9 @@ watch(
             >
           </el-col>
         </el-row>
+        <div id="showModel" class="flex justify-end" v-show="message.role === 'assistant'">
+          {{ message.model || 'gpt-3.5-turbo' }}
+        </div>
       </div>
     </div>
     <div

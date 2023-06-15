@@ -102,11 +102,17 @@ export const useMessagesStore = defineStore('messages', () => {
     setIsSending(true)
     body.stream = sysStore.stream
     body.temperature = sysStore.temperature
+    body.model = sysStore.model
 
     if (body.stream) {
       const streamId = pushMessage(
         '',
-        { role: 'assistant', status: 'success', skip: sysStore.skipHistoryMessages },
+        {
+          role: 'assistant',
+          status: 'success',
+          skip: sysStore.skipHistoryMessages,
+          model: body.model
+        },
         params
       )
       const sse = post_GetMessage(body, sysStore.API_KEY, sysStore.API_URL)
@@ -169,7 +175,12 @@ export const useMessagesStore = defineStore('messages', () => {
         const message = response.data.choices[0].message.content
         pushMessage(
           message,
-          { role: 'assistant', status: 'success', skip: sysStore.skipHistoryMessages },
+          {
+            role: 'assistant',
+            status: 'success',
+            skip: sysStore.skipHistoryMessages,
+            model: response.data.model || body.model
+          },
           params
         )
       } catch (error) {

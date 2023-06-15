@@ -5,6 +5,7 @@ import { env } from '../env'
 export const useSysStore = defineStore(
   'sys',
   () => {
+    const model = ref('gpt-3.5-turbo')
     const sideBar = ref(false)
     const openSideBar = ref(false)
     const display = ref('card')
@@ -64,6 +65,7 @@ export const useSysStore = defineStore(
     }
 
     return {
+      model,
       sideBar,
       openSideBar,
       display,
@@ -85,6 +87,7 @@ export const useSysStore = defineStore(
   {
     persist: {
       paths: [
+        'model',
         'sideBar',
         'setting',
         'display',

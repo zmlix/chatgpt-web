@@ -6,7 +6,7 @@ import { formatDate } from '../utils/utils'
 const DEFAULT_TIMEOUT = 60 * 1000
 const chatRequest = (data) => {
   const req = {
-    model: 'gpt-3.5-turbo',
+    model: data.model || 'gpt-3.5-turbo',
     messages: data.messages || [],
     temperature: data.temperature || 1,
     top_p: data.top_p || 1,
