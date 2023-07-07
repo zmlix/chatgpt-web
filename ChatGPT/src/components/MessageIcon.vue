@@ -25,12 +25,13 @@ const roleMap = {
   error: '错误'
 }
 const roleList = [
+  { value: 'system', label: '系统' },
   { value: 'user', label: '用户' },
-  { value: 'assistant', label: '助理' },
-  { value: 'system', label: '系统' }
+  { value: 'assistant', label: '助理' }
 ]
 
 const insert = () => {
+  messagesStore.setSendingType('part')
   messagesStore.pushMessage(
     '',
     {

@@ -35,6 +35,10 @@ export const useMessagesStore = defineStore('messages', () => {
     sending.id = val
   }
 
+  function setSendingType(val) {
+    sending.typ = val
+  }
+
   function setDisplay(val) {
     display.value = val
     let chat = chatStore.getCurrentChat()
@@ -315,6 +319,7 @@ export const useMessagesStore = defineStore('messages', () => {
     getHistoryMsg,
     sending,
     setIsSending,
-    setSendingId
+    setSendingId,
+    setSendingType
   }
 })
