@@ -40,7 +40,6 @@ const usePrompt = async () => {
   try {
     messagesStore.newMessages()
     const msg_id = messagesStore.pushMessage(props.prompt.prompt, {
-      typ: 'user',
       role: 'system',
       status: 'success'
     })

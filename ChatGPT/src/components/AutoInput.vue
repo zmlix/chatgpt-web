@@ -34,7 +34,6 @@ const send = () => {
     return
   }
   const Q_id = messagesStore.push({
-    typ: 'user',
     role: 'user',
     msg: input.value,
     status: 'success'

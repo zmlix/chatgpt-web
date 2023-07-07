@@ -1,10 +1,9 @@
 <script setup>
-import { Refresh, UserFilled } from '@element-plus/icons-vue'
+import { Refresh } from '@element-plus/icons-vue'
 import { ref, computed, watch } from 'vue'
 import 'github-markdown-css'
 import { Edit, Fold, Expand, CloseBold } from '@element-plus/icons-vue'
-import chatgpt from '../assets/ChatGPT_white.png'
-import chatgpt_black from '../assets/ChatGPT.png'
+import MessageIcon from './MessageIcon.vue'
 import useClipboard from 'vue-clipboard3'
 import { showMessage, getCurrentTime, XSS, MD } from '../utils/utils'
 import { useMessagesStore } from '../stores/messages'
@@ -71,8 +70,9 @@ const reSendMsg = () => {
   if (checkIsSending() || checkInput()) return
   const msg_id = props.message.id
   messagesStore.setSendingId(msg_id)
-  messagesStore.set(msg_id, { typ: 'user' })
-  messagesStore.set(msg_id, { role: 'user' })
+  if (props.message.role === 'assistant') {
+    messagesStore.set(msg_id, { role: 'user' })
+  }
   messagesStore.getMessage(
     { messages: messagesStore.getHistoryMsg('part', { id: msg_id }) },
     { insert: { id: msg_id } }
@@ -163,25 +163,15 @@ watch(
     <span
       v-if="chatMode"
       class="flex text-xs"
-      :class="message.typ == 'user' ? 'flex-row-reverse pr-12' : 'pl-12'"
+      :class="message.role == 'user' ? 'flex-row-reverse pr-12' : 'pl-12'"
       >{{ getCurrentTime(message.time) }}</span
     >
     <div
       class="flex items-start"
-      :class="{ 'flex-row-reverse': chatMode && message.typ == 'user' }"
+      :class="{ 'flex-row-reverse': chatMode && message.role == 'user' }"
     >
       <div class="mx-1 md:flex" :class="{ hidden: !chatMode }">
-        <el-avatar
-          v-if="message.typ == 'user'"
-          :icon="UserFilled"
-          style="background: transparent; font-size: 24px"
-        />
-        <el-avatar
-          v-else
-          :src="chatgpt"
-          :size="28"
-          style="background: transparent; width: 40px; margin-top: 5px"
-        />
+        <MessageIcon :message="message" color="white"></MessageIcon>
       </div>
       <div
         class="grid px-2.5 py-px my-0.5 mx-0 bg-white rounded-md text-sm"
@@ -190,17 +180,7 @@ watch(
         <div class="flex justify-between items-end" v-show="!chatMode || menu">
           <div class="flex items-center md:hidden">
             <div :class="{ hidden: chatMode }">
-              <el-avatar
-                v-if="message.typ == 'user'"
-                :icon="UserFilled"
-                style="background: transparent; font-size: 24px; color: black"
-              />
-              <el-avatar
-                v-else
-                :src="chatgpt_black"
-                :size="28"
-                style="background: transparent; width: 48px"
-              />
+              <MessageIcon :message="message" color="black"></MessageIcon>
             </div>
             <div class="flex w-full">{{ getCurrentTime(message.time) }}</div>
           </div>

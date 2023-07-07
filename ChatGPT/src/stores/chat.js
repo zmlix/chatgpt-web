@@ -102,18 +102,6 @@ export const useChatStore = defineStore(
           if (!Object.prototype.hasOwnProperty.call(chat, 'display')) {
             chat.display = 'card'
           }
-          chat.messages = chat.messages.map((message) => {
-            if (message.typ === 'user') {
-              message.role = 'user'
-            } else if (message.typ === 'chatgpt') {
-              message.role = 'assistant'
-            } else if (message.typ === 'system') {
-              message.role = 'system'
-            } else {
-              message.role = 'assistant'
-            }
-            return message
-          })
           return chat
         })
       }

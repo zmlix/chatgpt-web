@@ -169,7 +169,7 @@ export const useMessagesStore = defineStore('messages', () => {
             '```json\n' +
             JSON.stringify(error_msg, null, 4) +
             '\n```',
-          { typ: 'sys', status: 'error', role: null, skip: true },
+          { status: 'error', role: 'error', skip: true },
           params
         )
       })
@@ -198,7 +198,7 @@ export const useMessagesStore = defineStore('messages', () => {
         if (axios.isCancel(error)) {
           pushMessage(
             '<font color="red">Error: 请求中断</font>',
-            { typ: 'sys', status: 'error' },
+            { status: 'error', role: 'error', skip: true },
             params
           )
         } else {
@@ -213,7 +213,7 @@ export const useMessagesStore = defineStore('messages', () => {
               '```json\n' +
               JSON.stringify(error_msg, null, 4) +
               '\n```',
-            { typ: 'sys', status: 'error' },
+            { status: 'error', role: 'error', skip: true },
             params
           )
         }
@@ -237,6 +237,7 @@ export const useMessagesStore = defineStore('messages', () => {
     msg.id = random32BitNumber()
     msg.time = Date.now()
     msg.skip = msg.skip || msg.status !== 'success'
+    msg.model = msg.model || sysStore.model
     if ('insert' in params) {
       const id = params.insert.id
       const idx = messages.value.findIndex((item) => item.id === id)
