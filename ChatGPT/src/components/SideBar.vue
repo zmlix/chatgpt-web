@@ -30,9 +30,9 @@ onMounted(() => {
     <SideBar2 :size="size"></SideBar2>
   </el-drawer>
   <div
-    class="flex p-7 bg-white rounded-3xl"
-    :style="'min-width: ' + size + 'px;'"
     v-else
+    class="flex p-7 bg-white rounded-3xl"
+    :style="'width: ' + size + 'px;'"
     v-show="sysStore.openSideBar"
   >
     <SideBar2 :size="size"></SideBar2>

@@ -65,6 +65,14 @@ const modelOptions = [
   {
     value: 'gpt-3.5-turbo-16k-0613',
     label: 'gpt-3.5-turbo-16k-0613'
+  },
+  {
+    value: 'gpt-4',
+    label: 'gpt-4'
+  },
+  {
+    value: 'gpt-4-0613',
+    label: 'gpt-4-0613'
   }
 ]
 </script>
@@ -105,8 +113,7 @@ const modelOptions = [
           <div class="flex items-center justify-between gap-1">
             <el-tooltip effect="dark" content="选择不同聊天模型" placement="top-start">
               <label class="flex items-center px-2 justify-start w-20 gap-1" style="color: #606266"
-                >模型<el-icon>
-                  <InfoFilled /> </el-icon
+                >模型<el-icon> <InfoFilled /> </el-icon
               ></label>
             </el-tooltip>
 
@@ -130,8 +137,7 @@ const modelOptions = [
               placement="top-start"
             >
               <label class="flex items-center px-2 justify-start w-30 gap-1" style="color: #606266"
-                >常驻侧边栏<el-icon>
-                  <InfoFilled /> </el-icon
+                >常驻侧边栏<el-icon> <InfoFilled /> </el-icon
               ></label>
             </el-tooltip>
             <el-switch v-model="setting.sideBar" :disabled="size !== 350" />
@@ -144,8 +150,7 @@ const modelOptions = [
               placement="top-start"
             >
               <label class="flex items-center px-2 justify-start w-28 gap-1" style="color: #606266"
-                >展示方式<el-icon>
-                  <InfoFilled /> </el-icon
+                >展示方式<el-icon> <InfoFilled /> </el-icon
               ></label>
             </el-tooltip>
             <el-switch v-model="setting.display" :active-value="'chat'" :inactive-value="'card'" />
@@ -158,8 +163,7 @@ const modelOptions = [
               placement="top-start"
             >
               <label class="flex items-center px-2 justify-start w-32 gap-1" style="color: #606266"
-                >打字机效果<el-icon>
-                  <InfoFilled /> </el-icon
+                >打字机效果<el-icon> <InfoFilled /> </el-icon
               ></label>
             </el-tooltip>
             <el-switch v-model="setting.stream" />
@@ -168,8 +172,7 @@ const modelOptions = [
           <div class="flex items-center justify-between gap-20">
             <el-tooltip effect="dark" content="较高的值将使输出更加随机" placement="top-start">
               <label class="flex items-center px-2 justify-start w-32 gap-1" style="color: #606266"
-                >温度<el-icon>
-                  <InfoFilled /> </el-icon
+                >温度<el-icon> <InfoFilled /> </el-icon
               ></label>
             </el-tooltip>
             <el-slider v-model="setting.temperature" :max="2" :step="0.1" />
@@ -182,8 +185,7 @@ const modelOptions = [
               placement="top-start"
             >
               <label class="flex items-center px-2 justify-start w-28 gap-1" style="color: #606266"
-                >自动跳过<el-icon>
-                  <InfoFilled /> </el-icon
+                >自动跳过<el-icon> <InfoFilled /> </el-icon
               ></label>
             </el-tooltip>
             <el-switch v-model="setting.skipHistoryMessages" />

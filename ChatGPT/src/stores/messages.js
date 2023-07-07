@@ -150,7 +150,18 @@ export const useMessagesStore = defineStore('messages', () => {
         try {
           error_msg = JSON.parse(e.data)
         } catch (error) {
-          error_msg = { details: '未知错误' }
+          if (error.name === 'SyntaxError') {
+            console.log('eeeee', error)
+            const pattern = /\{[\s\S]*\}/
+            const match = e.data.match(pattern)
+            if (match) {
+              error_msg = JSON.parse(match[0])
+            } else {
+              error_msg = { details: '未知错误' }
+            }
+          } else {
+            error_msg = { details: '未知错误' }
+          }
         }
         del(streamId)
         pushMessage(
@@ -219,7 +230,7 @@ export const useMessagesStore = defineStore('messages', () => {
 
   function push(msg, params = {}) {
     if (length.value === 0) {
-      let title = msg.msg.slice(0, 13) + (msg.msg.length <= 13 ? '' : '...')
+      let title = msg.msg.slice(0, 25) + (msg.msg.length <= 25 ? '' : '...')
       console.log('title', title)
       chatStore.renameChatByIdx(mId.value, title)
     }

@@ -1,8 +1,8 @@
 <script setup>
+import { reactive } from 'vue'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { getCurrentTime, showMessage, downloadMarkdown, downloadImg, XSS, MD } from '../utils/utils'
 import html2canvas from 'html2canvas'
-import { ElMessageBox, ElMessage } from 'element-plus'
 import { useMessagesStore } from '../stores/messages'
 const messagesStore = useMessagesStore()
 
@@ -13,29 +13,26 @@ defineProps({
   }
 })
 
+const Preview = reactive({
+  isPreview: false,
+  data: '',
+  download: null
+})
+
 const preview = (data = '', type = 'md') => {
-  ElMessageBox.confirm(
-    `<div class="preview markdown-body overflow-auto p-2" style="height: 66vh">
-      ${type === 'md' ? XSS.process(MD.render(data || '')) : ''}
-    </div>`,
-    '预览',
-    {
-      dangerouslyUseHTMLString: true,
-      distinguishCancelAndClose: true,
-      confirmButtonText: '下载',
-      cancelButtonText: '取消'
-    }
-  ).then(() => {
-    if (type === 'md') {
+  Preview.isPreview = true
+  if (type === 'md') {
+    Preview.data = XSS.process(MD.render(data || ''))
+    console.log(Preview.data)
+    Preview.download = () => {
       downloadMarkdown(data, `${messagesStore.title}.md`)
-    } else if (type === 'png') {
+    }
+  } else {
+    Preview.data = ''
+    Preview.download = () => {
       downloadImg(data, `${messagesStore.title}.png`)
     }
-    ElMessage({
-      type: 'success',
-      message: '下载成功'
-    })
-  })
+  }
 }
 
 const export_img = () => {
@@ -63,6 +60,12 @@ const export_img = () => {
           .querySelector('.message-box')
           .querySelectorAll('span')
           .forEach((span) => (span.style.paddingBottom = '5px'))
+        dom
+          .querySelector('.message-box')
+          .querySelectorAll('#showModel')
+          .forEach((e) => {
+            e.style.color = 'black'
+          })
       }
       if (messagesStore.display === 'card') {
         dom
@@ -70,9 +73,7 @@ const export_img = () => {
           .querySelectorAll('span.is-text')
           .forEach((span) => (span.style.paddingBottom = '15px'))
       }
-      dom
-        .querySelectorAll('#showModel')
-        .forEach((e) => ((e.style.paddingBottom = '10px'), console.log(e)))
+      dom.querySelectorAll('#showModel').forEach((e) => (e.style.paddingBottom = '10px'))
     },
     useCORS: true,
     allowTaint: true,
@@ -124,7 +125,8 @@ const export_markdown = () => {
       <div class="flex items-center justify-between">
         <el-tooltip effect="dark" content="跳过的对话将不会被导出" placement="top-start">
           <label class="flex items-center px-2 justify-start w-24 gap-1" style="color: #606266"
-            >导出对话<el-icon> <InfoFilled /> </el-icon
+            >导出对话<el-icon>
+              <InfoFilled /> </el-icon
           ></label>
         </el-tooltip>
         <el-button-group>
@@ -134,6 +136,18 @@ const export_markdown = () => {
       </div>
     </div>
   </el-popover>
+  <el-dialog v-model="Preview.isPreview" title="预览" width="90%" top="5vh" destroy-on-close>
+    <div class="preview markdown-body overflow-auto p-2" style="height: 66vh">
+      <!-- {{Preview.data}} -->
+      <div v-html="Preview.data" ref="showMsgRef" class="markdown-body"></div>
+    </div>
+    <template #footer>
+      <span class="preview-footer">
+        <el-button @click="Preview.isPreview = false">取消</el-button>
+        <el-button type="primary" @click="Preview.download">下载</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped>

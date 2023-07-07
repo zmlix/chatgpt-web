@@ -53,7 +53,11 @@ const rename = () => {
     <el-icon class="mx-1 hover:cursor-move drag-chat">
       <ChatDotSquare />
     </el-icon>
-    <span v-if="!isRenameChat" class="flex px-3 w-full h-5 text-sm overflow-auto" @click="getChat">
+    <span
+      v-if="!isRenameChat"
+      class="px-3 w-full h-5 text-sm overflow-hidden text-ellipsis whitespace-nowrap"
+      @click="getChat"
+    >
       {{ chat.title }}</span
     >
     <el-input v-model="title" placeholder="请输入" v-else>
