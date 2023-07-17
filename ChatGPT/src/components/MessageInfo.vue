@@ -236,7 +236,13 @@ watch(
           @click="() => (menu = !menu)"
         >
           <div v-if="!isMarkdown" class="whitespace-pre-wrap">{{ raw_msg }}</div>
-          <div v-else v-html="markdown_msg" ref="showMsgRef" class="markdown-body"></div>
+          <div
+            v-else
+            v-html="markdown_msg"
+            ref="showMsgRef"
+            class="markdown-body"
+            style="background-color: white; color: black"
+          ></div>
         </div>
         <el-row :gutter="10" v-show="isEdit" class="mb-2">
           <el-col :span="21">
